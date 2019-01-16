@@ -8,6 +8,8 @@
 
 using namespace std;
 
+
+// Ceci est un test !
 void identification() {
 	char next;
 	bool notok = true;
