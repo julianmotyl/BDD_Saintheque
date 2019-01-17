@@ -1,15 +1,15 @@
 #include <iostream>
-#include <my_global.h>
 #include <mysql.h>
 #include <time.h>
 #include <math.h>
 
-#include "fct.h"
+#include "fonction.h"
 
 using namespace std;
 
+int qstate;
 
-// Ceci est un test !
+
 void identification() {
 	char next;
 	bool notok = true;
@@ -50,23 +50,72 @@ void identification() {
 }
 bool connexionMySQL(char * identifiant, char  * motdepasse) {
 
-	MYSQL mysql;
-	mysql_init(&mysql);
-	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "");
+	MYSQL* connexion;// = new MYSQL;
+	MYSQL_ROW row;
+	MYSQL_RES *res;
 
+	connexion = mysql_init(0);
+	//	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "");
+	system("PAUSE");
+	connexion = mysql_real_connect(connexion, "localhost", "test1", "test1", "sainteque", 3306, NULL, 0);
+	string requete = "SHOW tables;";
+	const char* r = new char[45];
+	r = requete.c_str();
 
-	if (mysql_real_connect(&mysql, "localhost", identifiant, motdepasse, "saintheque", 3306, NULL, 0))
+	mysql_query(connexion, r);
+	mysql_close(connexion);
+	cout << "La connexion a fonctionné !";
+	system("PAUSE");
+	return true;
+	/*
+	if (mysql_real_connect(&mysql, "localhost", "root", "root", "saintheque", 3306, NULL, 0))
 	{
-		mysql_query(&mysql, "INSERT INTO joueur VALUES('','');"); //
+		mysql_query(&mysql, "SHOW tables;");
 		mysql_close(&mysql);
 		cout << "La connexion a fonctionné !";
+		system("PAUSE");
 		return true;
 	}
 	else
 	{
-		cout << "Une erreur s'est produite lors de la connexion à la BDD!" << endl;
+		cout << "Une erreur s'est produite lors de la connexion a la BDD!" << endl;
+		system("PAUSE");
 		return false;
+	}*/
+}
+
+void  afficheAdherents(char * table)
+{
+	MYSQL* conn;
+	MYSQL_ROW row;
+	MYSQL_RES *res;
+	conn = mysql_init(0);
+
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
+
+	if (conn) {
+		puts("Successful connection to database!");
+
+		string query = "SELECT * FROM adherents";
+		const char* q = query.c_str();
+		qstate = mysql_query(conn, q);
+		if (!qstate)
+		{
+			res = mysql_store_result(conn);
+			while (row = mysql_fetch_row(res))
+			{
+				printf("ID: %s, Nom: %s, Prenom: %s mail: %s, nbr_ouvrages_max: %s, adresse: %s score: %s, mdp: %s, role: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]);
+			}
+		}
+		else
+		{
+			cout << "Query failed: " << mysql_error(conn) << endl;
+		}
 	}
+	else {
+		puts("Connection to database has failed!");
+	}
+	system("PAUSE");
 }
 
 void finish_with_error(MYSQL *con)

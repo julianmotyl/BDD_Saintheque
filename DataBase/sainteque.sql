@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `sainteque` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
+USE `sainteque`;
 -- MySQL dump 10.13  Distrib 8.0.13, for Win64 (x86_64)
 --
 -- Host: localhost    Database: sainteque
@@ -16,32 +18,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `adhérents`
+-- Table structure for table `adherents`
 --
 
-DROP TABLE IF EXISTS `adhérents`;
+DROP TABLE IF EXISTS `adherents`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `adhérents` (
-  `id_adhérents` int(10) unsigned NOT NULL COMMENT 'Clé primaire de l''adherent.',
+CREATE TABLE `adherents` (
+  `id_adhérents` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire de l''adherent.',
   `nom` varchar(45) NOT NULL,
   `prénom` varchar(45) NOT NULL,
   `mail` varchar(45) NOT NULL,
   `nbr_ouvrages_max` int(10) unsigned NOT NULL DEFAULT '5',
   `adresse` varchar(45) NOT NULL,
   `score` int(10) unsigned NOT NULL DEFAULT '100',
+  `mdp` varchar(45) NOT NULL,
+  `role` varchar(45) NOT NULL DEFAULT 'Client_Saintheque',
   PRIMARY KEY (`id_adhérents`),
   UNIQUE KEY `idadhérents_UNIQUE` (`id_adhérents`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `adhérents`
+-- Dumping data for table `adherents`
 --
 
-LOCK TABLES `adhérents` WRITE;
-/*!40000 ALTER TABLE `adhérents` DISABLE KEYS */;
-/*!40000 ALTER TABLE `adhérents` ENABLE KEYS */;
+LOCK TABLES `adherents` WRITE;
+/*!40000 ALTER TABLE `adherents` DISABLE KEYS */;
+INSERT INTO `adherents` VALUES (1,'test','test','test1',10,'test',100,'test1','Admin_Saintheque'),(2,'test','test','test2',10,'test',100,'test2','Bibliothecaire_Saintheque'),(3,'test','test','test3',10,'test',100,'test3','Client_Saintheque');
+/*!40000 ALTER TABLE `adherents` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -214,4 +219,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-16 11:23:50
+-- Dump completed on 2019-01-17 15:04:56
