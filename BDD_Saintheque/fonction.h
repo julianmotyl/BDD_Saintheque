@@ -1,13 +1,13 @@
 #pragma once
 
 typedef struct user {
-	char * id;
-	char * mdp;
+	const char * id;
+	const char * mdp;
 }user;
 
 typedef struct groupe {
-	char * role;
-	char * mdp;
+	const char * role;
+	const char * mdp;
 }groupe;
 
 void identification();
