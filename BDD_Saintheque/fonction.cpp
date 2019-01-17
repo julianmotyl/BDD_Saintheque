@@ -197,7 +197,24 @@ void action(groupe groupe) {
 	}
 }
 
+void search_saintheque() {
+	unsigned int choix;
+	bool notok = true;
+	while (notok) {
+		cout << "Souhaitez-vous rechercher un livre (1) ou un auteur (2) ? " << endl << ": ";
+		cin >> choix;
+		if (choix == 1) {
+			notok = false;
 
+		}
+		else {
+			if (choix == 2) {
+				notok = false;
+			}
+		}
+
+
+	}
 
 
 
