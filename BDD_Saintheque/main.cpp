@@ -11,7 +11,7 @@ using namespace std;
 int main() {
 	cout << "Bienvenu à la Médiatheque de Saint-Etienne ! " << endl; // prints Bienvenu à la Médiatheque de Saint-Etienne !
 	printf("MySQL client version: %s\n", mysql_get_client_info());
-
+	identification();
 	user user;
 	user.id = "root";
 	user.mdp = ".root123.";

@@ -27,12 +27,11 @@ void identification() {
 	cout << "======   AINTHEQUE - DATABASE ACCESS" << endl;
 	cout << "................................................" << endl;
 
-	getchar();
 
 	while (notok) {
-		cout << "Bienvenu-e-s, une identification est necessaire, voulez-vous continuer ?(O/n) -> ";
+		cout << "Bienvenu-e-s, une identification est necessaire, voulez-vous continuer ?(o/n) -> ";
 		cin >> next;
-		if (next == 'O') {
+		if (next == 'o') {
 			notok = false;
 		}
 		else {
@@ -47,8 +46,9 @@ void identification() {
 	cout << endl << "Veuillez saisir votre mot de passe :" << endl << "|-> ";
 	cin >> logpwd;
 	cout << endl << "<...> Connexion a l'interface de l'utilisateur '" << logid << "' <...>" << endl;
+	connexionMySQL("test1", "test1");
 }
-bool connexionMySQL(char * identifiant, char  * motdepasse) {
+bool connexionMySQL(const char * identifiant, const char  * motdepasse) {
 
 	MYSQL* connexion;// = new MYSQL;
 	MYSQL_ROW row;
@@ -57,7 +57,7 @@ bool connexionMySQL(char * identifiant, char  * motdepasse) {
 	connexion = mysql_init(0);
 	//	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "");
 	system("PAUSE");
-	connexion = mysql_real_connect(connexion, "localhost", "test1", "test1", "sainteque", 3306, NULL, 0);
+	connexion = mysql_real_connect(connexion, "localhost", identifiant, motdepasse, "sainteque", 3306, NULL, 0);
 	string requete = "SHOW tables;";
 	const char* r = new char[45];
 	r = requete.c_str();

@@ -11,7 +11,7 @@ typedef struct groupe {
 }groupe;
 
 void identification();
-bool connexionMySQL(char *, char *);
+bool connexionMySQL(const char *, const char *);
 groupe  recuperationGroupe(user);
 void action(groupe);
 
