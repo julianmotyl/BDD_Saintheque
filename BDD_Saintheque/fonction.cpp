@@ -41,16 +41,33 @@ void identification() {
 		}
 
 	}
-	cout << endl << "Veuillez saisir votre @mail :" << endl << "|-> ";
-	cin >> logid;
-	cout << endl << "Veuillez saisir votre mot de passe :" << endl << "|-> ";
-	cin >> logpwd;
-	cout << endl << "<...> Connexion a l'interface de l'utilisateur '" << logid << "' <...>" << endl;
-	connexionMySQL("test1", "test1");
+	bool condition = false;
+	while (!condition) {
+		cout << endl << "Veuillez saisir votre @mail :" << endl << "|-> ";
+		cin >> logid;
+		cout << endl << "Veuillez saisir votre mot de passe :" << endl << "|-> ";
+		cin >> logpwd;
+		cout << endl << "<...> Connexion a l'interface de l'utilisateur '" << logid << "' <...>" << endl;
+		condition = connexionMySQL(logid, logpwd);
+		if (condition == false) {
+			cout << "Echec de connexion à la base de données, souhaitez vous réessayer ? (o/n)" << endl;
+			char retry;
+			cin >> retry;
+				if (retry == 'o') {
+					condition = false;
+				}
+				else {
+					condition = true;
+				}
+		}
+		else {
+			//TODO
+		}
+	}
 }
 bool connexionMySQL(const char * identifiant, const char  * motdepasse) {
 
-	MYSQL* connexion;// = new MYSQL;
+	static MYSQL* connexion;
 	MYSQL_ROW row;
 	MYSQL_RES *res;
 
@@ -58,15 +75,21 @@ bool connexionMySQL(const char * identifiant, const char  * motdepasse) {
 	//	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "");
 	system("PAUSE");
 	connexion = mysql_real_connect(connexion, "localhost", identifiant, motdepasse, "sainteque", 3306, NULL, 0);
-	string requete = "SHOW tables;";
-	const char* r = new char[45];
-	r = requete.c_str();
+	if (connexion){
+		string requete = "SHOW tables;";
+		const char* r = new char[45];
+		r = requete.c_str();
 
-	mysql_query(connexion, r);
-	mysql_close(connexion);
-	cout << "La connexion a fonctionné !";
-	system("PAUSE");
-	return true;
+		mysql_query(connexion, r);
+		mysql_close(connexion);
+		cout << "La connexion a fonctionné !" << endl;
+		return true;
+	}
+	else {
+		cout << "La connexion à fonctionné !" << endl;
+		return false;
+	}
+
 	/*
 	if (mysql_real_connect(&mysql, "localhost", "root", "root", "saintheque", 3306, NULL, 0))
 	{
