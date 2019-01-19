@@ -143,7 +143,7 @@ groupe recuperationGroupe(user user) {
 		finish_with_error(connexionMySQL);
 	}
 
-	if (mysql_query(connexionMySQL, "SELECT * FROM adhérant"))
+	if (mysql_query(connexionMySQL, "SELECT * FROM adhérent"))
 	{
 		finish_with_error(connexionMySQL);
 	}
@@ -199,22 +199,61 @@ void action(groupe groupe) {
 
 void search_saintheque() {
 	unsigned int choix;
+	char * search;
 	bool notok = true;
-	while (notok) {
-		cout << "Souhaitez-vous rechercher un livre (1) ou un auteur (2) ? " << endl << ": ";
-		cin >> choix;
-		if (choix == 1) {
-			notok = false;
 
-		}
-		else {
-			if (choix == 2) {
+	MYSQL* conn;
+	MYSQL_ROW row;
+	MYSQL_RES *res;
+	conn = mysql_init(0);
+
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
+
+	if (conn) {
+		puts("Successful connection to database!");
+
+		while (notok) {
+			cout << "Veuillez rentrer le nom du livre ou de l'auteur à rechercher ? " << endl << ": ";
+			cin >> *search;
+			cout << "Souhaitez-vous rechercher un livre (1) ou un auteur (2) ? " << endl << ": ";
+			cin >> choix;
+			if (choix == 1) {
 				notok = false;
+				string query = "SELECT * FROM ouvrage WHERE titre SOUNDS LIKE "+ *search;
+			}
+			else {
+				if (choix == 2) {
+					notok = false;
+					string query = "SELECT * FROM auteur WHERE nom SOUNDS LIKE " + *search + "OR prenom SOUNDS LIKE " *search;
+				}
 			}
 		}
-
-
+		const char* q = query.c_str();
+		qstate = mysql_query(conn, q);
+		if (!qstate)
+		{
+			res = mysql_store_result(conn);
+			while (row = mysql_fetch_row(res))
+			{
+				if (choix == 1) {
+					printf("ID: %s, Titre: %s, Genre: %s Auteur: %s, Date de parution: %s, Durée: %s, Type: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6]);
+				}
+				if (choix == 2) {
+					printf("ID: %s, Nom: %s, Prenom: %s, Date de naissance: %s, Date de décès: %s, Biographie: %s\n", row[0], row[1], row[2], row[3], row[4], row[5]);
+				}
+			}
+		}
+		else
+		{
+			cout << "Query failed: " << mysql_error(conn) << endl;
+		}
 	}
+	else {
+		puts("Connection to database has failed!");
+	}
+	system("PAUSE");
+
+}
 
 
 
