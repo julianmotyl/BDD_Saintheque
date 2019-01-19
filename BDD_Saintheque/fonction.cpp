@@ -9,6 +9,7 @@ using namespace std;
 
 int qstate;
 
+static MYSQL* connexion;
 
 void identification() {
 	char next;
@@ -67,7 +68,6 @@ void identification() {
 }
 bool connexionMySQL(const char * identifiant, const char  * motdepasse) {
 
-	static MYSQL* connexion;
 	MYSQL_ROW row;
 	MYSQL_RES *res;
 

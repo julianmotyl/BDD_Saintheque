@@ -16,7 +16,10 @@ groupe  recuperationGroupe(user);
 void action(groupe);
 
 
-
+typedef struct colonne {
+	const char * nom;
+	int numColone;
+};
 
 
 
