@@ -14,7 +14,7 @@ int main() {
 
 	user user;
 	user.id = "root";
-	user.mdp = ".root123.";
+	user.mdp = "/Otari98";
 	groupe droit = recuperationGroupe(user);
 	action(droit);
 

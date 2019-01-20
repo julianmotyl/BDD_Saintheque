@@ -177,7 +177,7 @@ groupe recuperationGroupe(user user) {
 
 void action(groupe groupe) {
 	if (groupe.role == "Client_Saintheque" || groupe.role == "Admin_Saintheque" || groupe.role == "Bibliotecaire_Saintheque") {
-		cout << "Bonjour " << groupe.role << " que souhaitez vous faire ?" << endl;
+		cout << "Bonjour, " << groupe.role << " que souhaitez vous faire ?" << endl;
 		cout << " (1) Faire une recherche par livre ou par auteur " << endl;
 	}
 	else if (groupe.role == "Bibliotecaire_Saintheque" || groupe.role == "Admin_Saintheque") {
@@ -224,7 +224,7 @@ void search_saintheque() {
 			else {
 				if (choix == 2) {
 					notok = false;
-					string query = "SELECT * FROM auteur WHERE nom SOUNDS LIKE " + *search + "OR prenom SOUNDS LIKE " *search;
+					string query = "SELECT * FROM auteur WHERE nom SOUNDS LIKE " + *search + " OR WHERE prenom SOUNDS LIKE " *search;
 				}
 			}
 		}
