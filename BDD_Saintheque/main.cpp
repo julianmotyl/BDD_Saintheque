@@ -1,4 +1,4 @@
-#include <mysql.h>
+/*#include <mysql.h>
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -20,4 +20,4 @@ int main() {
 	action(droit);
 
 	return 0;
-}
+}*/

@@ -14,6 +14,7 @@ void identification();
 bool connexionMySQL(char *, char *);
 groupe  recuperationGroupe(user);
 void action(groupe);
+void search_saintheque();
 
 
 

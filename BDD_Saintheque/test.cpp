@@ -1,4 +1,4 @@
-/*#include <iostream>
+#include <iostream>
 #include <mysql.h>
 #include <string>
 #include <time.h>
@@ -11,7 +11,7 @@ using namespace std;
 int qstater;
 
 
-int remain(){
+int wmain(){
 	MYSQL* conn;
 	MYSQL_ROW row;
 	MYSQL_RES *res;
@@ -44,5 +44,8 @@ int remain(){
 	}
 	system("PAUSE");
 
+	search_saintheque();
+	system("PAUSE");
+
 return 0;
-}*/
+}

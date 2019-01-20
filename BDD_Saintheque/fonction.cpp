@@ -147,6 +147,7 @@ groupe recuperationGroupe(user user) {
 	}
 
 	//INSERT INTO `saintheque`.`adherents` (`nom`, `prénom`, `mail`, `mdp`, `role`, `nbr_ouvrages_max`, `adresse`, `score`) VALUES ('Philippe', 'Edouard', 'edouard.philippe@mail.fr', 'PEDD', 'client_saintheque', '0', '5 rue du Nord, 42000 Saint-Etienne, France', '100');
+	//UPDATE `saintheque`.`adherents` SET `adresse` = '5 rue du Nord, 42000 Saint-Etienne, France' WHERE (`id_adhérents` = '0');
 
 
 	//if (mysql_query(connexionMySQL, "SELECT * FROM adhérent"))
@@ -174,7 +175,7 @@ groupe recuperationGroupe(user user) {
 		}
 		printf("\n");
 	}
-
+	getchar();
 	mysql_free_result(result);
 	mysql_close(connexionMySQL);
 
