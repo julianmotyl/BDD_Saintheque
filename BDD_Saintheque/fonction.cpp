@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <mysql.h>
 #include <time.h>
 #include <math.h>
@@ -199,7 +200,7 @@ void action(groupe groupe) {
 
 void search_saintheque() {
 	unsigned int choix;
-	char * search;
+	string search;
 	bool notok = true;
 
 	MYSQL* conn;
@@ -207,24 +208,28 @@ void search_saintheque() {
 	MYSQL_RES *res;
 	conn = mysql_init(0);
 
-	conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
+	//conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
+
 
 	if (conn) {
 		puts("Successful connection to database!");
-
+		string query;
 		while (notok) {
 			cout << "Veuillez rentrer le nom du livre ou de l'auteur à rechercher ? " << endl << ": ";
-			cin >> *search;
+			getline (cin, search);
 			cout << "Souhaitez-vous rechercher un livre (1) ou un auteur (2) ? " << endl << ": ";
 			cin >> choix;
 			if (choix == 1) {
 				notok = false;
-				string query = "SELECT * FROM ouvrage WHERE titre SOUNDS LIKE "+ *search;
+				query = "SELECT * FROM ouvrage WHERE titre SOUNDS LIKE "+ search;
 			}
 			else {
 				if (choix == 2) {
 					notok = false;
-					string query = "SELECT * FROM auteur WHERE nom SOUNDS LIKE " + *search + " OR WHERE prenom SOUNDS LIKE " *search;
+					string query_nom = "SELECT * FROM auteur WHERE nom SOUNDS LIKE " + search.substr(search.find(' ') + 1, 999999);
+					string query_prenom = " AND WHERE prenom SOUNDS LIKE " + search.substr(1, search.find(' ') - 1);
+					query = query_nom + query_prenom;
 				}
 			}
 		}

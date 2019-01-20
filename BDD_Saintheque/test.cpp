@@ -29,7 +29,7 @@ int main(){
 			res = mysql_store_result(conn);
 			while (row = mysql_fetch_row(res))
 			{
-				printf("ID: %s, Nom: %s, Prenom: %s mail: %s, nbr_ouvrages_max: %s, adresse: %s score: %s, mdp: %s, role: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]);
+				printf("ID: %s, Nom: %s, Prenom: %s, mail: %s, nbr_ouvrages_max: %s, adresse: %s, score: %s, mdp: %s, role: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]);
 			}
 		}
 		else
