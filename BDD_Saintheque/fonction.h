@@ -1,5 +1,10 @@
 #pragma once
+#include <mysql.h>
+#include <iostream>
 #include <string>
+#include <cstdlib>
+#include <time.h>
+#include <math.h>
 
 typedef struct user {
 	const char * id;
@@ -20,8 +25,6 @@ bool addDB_random_adherents(unsigned int nb);
 string majuscule(string &chaine);
 string minuscule(string &chaine);
 string gename(const unsigned int MIN, const unsigned int MAX);
-
-
 
 
 

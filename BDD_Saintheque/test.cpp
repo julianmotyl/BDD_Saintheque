@@ -45,10 +45,10 @@ int wmain(){
 	}
 	system("PAUSE");
 
-	search_saintheque();
-	system("PAUSE");
-	cout<<"add_err : "<<addDB_random_adherents(5) << endl;
-	system("PAUSE");
+	//search_saintheque();
+	//system("PAUSE");
+	//cout<<"add_err : "<<addDB_random_adherents(5) << endl;
+	//system("PAUSE");
 
 return 0;
 }
