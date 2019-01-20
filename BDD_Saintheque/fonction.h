@@ -21,9 +21,9 @@ static user utilisateur; //On conserve aussi le mmême urilisateur
 
 void identification();
 bool connexionMySQL(const char *, const char *);
-void action(groupe);
+void action();
 void finish_with_error(MYSQL*);
-void  mysqlQuery(colonne[]);
+void mysqlQuery(colonne[]);
 
 void customQuery();
 void executeOrder66();

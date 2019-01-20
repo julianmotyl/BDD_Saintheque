@@ -12,6 +12,7 @@ int main() {
 	cout << "Bienvenu à la Médiatheque de Saint-Etienne ! " << endl; // prints Bienvenu à la Médiatheque de Saint-Etienne !
 
 	identification();
+	action();
 
 	return 0;
 }

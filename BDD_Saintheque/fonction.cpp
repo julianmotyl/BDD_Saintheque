@@ -59,28 +59,18 @@ void identification() {
 					condition = false;
 				}
 				else {
-					condition = true;
 				}
 		}
 		else {
-			system("PAUSE");
 		}
 	}
 }
 
 bool connexionMySQL(const char * identifiant, const char  * motdepasse) {
 
-	MYSQL_ROW row;
-	MYSQL_RES *res; 
-
 	connexion = mysql_init(0);
 	connexion = mysql_real_connect(connexion, "localhost", identifiant, motdepasse, "sainteque", 3306, NULL, 0);
-	if (!connexion){
-		string requete = "SHOW tables;";
-		const char* r = new char[45];
-		r = requete.c_str();
-
-		mysql_query(connexion, r);
+	if (connexion){
 		cout << "La connexion a fonctionné !" << endl;
 		return true;
 	}
@@ -132,9 +122,9 @@ void finish_with_error(MYSQL *con)
 
 
 
-void action(user utilisateur) {
+void action() {
 	char choix;
-	cout << "Bonjour " << utilisateur.role << " que souhaitez vous faire ?" << endl;
+	cout << "Bonjour " << utilisateur.id << " que souhaitez vous faire ?" << endl;
 	cout << " (1) Faire une recherche par livre ou par auteur " << endl;
 	if (utilisateur.role == "Bibliotecaire_Saintheque" || utilisateur.role == "Admin_Saintheque") {
 		cout << " (2) Ajouter un emprunt" << endl;
