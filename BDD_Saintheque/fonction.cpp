@@ -58,7 +58,8 @@ bool connexionMySQL(char * identifiant, char  * motdepasse) {
 	connexion = mysql_init(0);
 	//	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "");
 	system("PAUSE");
-	connexion = mysql_real_connect(connexion, "localhost", "test1", "test1", "sainteque", 3306, NULL, 0);
+	//connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
+	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
 	string requete = "SHOW tables;";
 	const char* r = new char[45];
 	r = requete.c_str();
@@ -92,7 +93,8 @@ void  afficheAdherents(char * table)
 	MYSQL_RES *res;
 	conn = mysql_init(0);
 
-	conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
+	//conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
 
 	if (conn) {
 		puts("Successful connection to database!");
@@ -144,7 +146,11 @@ groupe recuperationGroupe(user user) {
 		finish_with_error(connexionMySQL);
 	}
 
-	if (mysql_query(connexionMySQL, "SELECT * FROM adhérent"))
+	//INSERT INTO `saintheque`.`adherents` (`nom`, `prénom`, `mail`, `mdp`, `role`, `nbr_ouvrages_max`, `adresse`, `score`) VALUES ('Philippe', 'Edouard', 'edouard.philippe@mail.fr', 'PEDD', 'client_saintheque', '0', '5 rue du Nord, 42000 Saint-Etienne, France', '100');
+
+
+	//if (mysql_query(connexionMySQL, "SELECT * FROM adhérent"))
+	if (mysql_query(connexionMySQL, "SELECT * FROM adherents"))
 	{
 		finish_with_error(connexionMySQL);
 	}

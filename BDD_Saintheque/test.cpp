@@ -1,5 +1,6 @@
-#include <iostream>
+/*#include <iostream>
 #include <mysql.h>
+#include <string>
 #include <time.h>
 #include <math.h>
 
@@ -7,24 +8,25 @@
 
 using namespace std;
 
-int qstate;
+int qstater;
 
 
-int main(){
+int remain(){
 	MYSQL* conn;
 	MYSQL_ROW row;
 	MYSQL_RES *res;
 	conn = mysql_init(0);
 
-	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0);
+	//conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
 
 	if (conn) {
 		puts("Successful connection to database!");
 
 		string query = "SELECT * FROM adherents";
 		const char* q = query.c_str();
-		qstate = mysql_query(conn, q);
-		if (!qstate)
+		qstater = mysql_query(conn, q);
+		if (!qstater)
 		{
 			res = mysql_store_result(conn);
 			while (row = mysql_fetch_row(res))
@@ -43,4 +45,4 @@ int main(){
 	system("PAUSE");
 
 return 0;
-}
+}*/

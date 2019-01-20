@@ -1,5 +1,6 @@
 #include <mysql.h>
 #include <iostream>
+#include <string>
 #include <cstdlib>
 #include "fonction.h"
 
@@ -14,7 +15,7 @@ int main() {
 
 	user user;
 	user.id = "root";
-	user.mdp = "/Otari98";
+	user.mdp = ".root123";
 	groupe droit = recuperationGroupe(user);
 	action(droit);
 
