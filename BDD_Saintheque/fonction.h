@@ -1,8 +1,9 @@
 #pragma once
 
 typedef struct user {
-	const char * id;
-	const char * mdp;
+	char * id;
+	char * mdp;
+	char * role;
 }user;
 
 typedef struct groupe {
@@ -10,18 +11,26 @@ typedef struct groupe {
 	const char * mdp;
 }groupe;
 
-void identification();
-bool connexionMySQL(const char *, const char *);
-groupe  recuperationGroupe(user);
-void action(groupe);
-
-
 typedef struct colonne {
 	const char * nom;
 	int numColone;
-};
+}colonne;
+
+static MYSQL* connexion; //On conserve la même connexion pendant toute la durée du programme
+static user utilisateur; //On conserve aussi le mmême urilisateur
+
+void identification();
+bool connexionMySQL(const char *, const char *);
+void action(groupe);
+void finish_with_error(MYSQL*);
+void  mysqlQuery(colonne[]);
+
+void customQuery();
+void executeOrder66();
 
 
+
+//TD des Listes
 
 typedef struct maillon {
 
@@ -31,6 +40,7 @@ typedef struct maillon {
 } maillon;
 
 typedef maillon *list;
+
 
 int factorielle(int n);
 int ** matrixInt(const int ROW, const int COL, const int MIN, const int MAX);

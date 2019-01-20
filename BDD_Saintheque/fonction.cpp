@@ -9,7 +9,6 @@ using namespace std;
 
 int qstate;
 
-static MYSQL* connexion;
 
 void identification() {
 	char next;
@@ -46,11 +45,13 @@ void identification() {
 	while (!condition) {
 		cout << endl << "Veuillez saisir votre @mail :" << endl << "|-> ";
 		cin >> logid;
+		utilisateur.id = logid;
 		cout << endl << "Veuillez saisir votre mot de passe :" << endl << "|-> ";
 		cin >> logpwd;
+		utilisateur.mdp = logpwd;
 		cout << endl << "<...> Connexion a l'interface de l'utilisateur '" << logid << "' <...>" << endl;
 		condition = connexionMySQL(logid, logpwd);
-		if (condition == false) {
+		if (!condition) {
 			cout << "Echec de connexion à la base de données, souhaitez vous réessayer ? (o/n)" << endl;
 			char retry;
 			cin >> retry;
@@ -62,69 +63,50 @@ void identification() {
 				}
 		}
 		else {
-			//TODO
+			system("PAUSE");
 		}
 	}
 }
+
 bool connexionMySQL(const char * identifiant, const char  * motdepasse) {
 
 	MYSQL_ROW row;
-	MYSQL_RES *res;
+	MYSQL_RES *res; 
 
 	connexion = mysql_init(0);
-	//	mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "");
-	system("PAUSE");
 	connexion = mysql_real_connect(connexion, "localhost", identifiant, motdepasse, "sainteque", 3306, NULL, 0);
-	if (connexion){
+	if (!connexion){
 		string requete = "SHOW tables;";
 		const char* r = new char[45];
 		r = requete.c_str();
 
 		mysql_query(connexion, r);
-		mysql_close(connexion);
 		cout << "La connexion a fonctionné !" << endl;
 		return true;
 	}
 	else {
-		cout << "La connexion à fonctionné !" << endl;
+		cout << "La connexion n'a pas fonctionné !" << endl;
 		return false;
 	}
-
-	/*
-	if (mysql_real_connect(&mysql, "localhost", "root", "root", "saintheque", 3306, NULL, 0))
-	{
-		mysql_query(&mysql, "SHOW tables;");
-		mysql_close(&mysql);
-		cout << "La connexion a fonctionné !";
-		system("PAUSE");
-		return true;
-	}
-	else
-	{
-		cout << "Une erreur s'est produite lors de la connexion a la BDD!" << endl;
-		system("PAUSE");
-		return false;
-	}*/
 }
 
-void  afficheAdherents(char * table)
+void  mysqlQuery(colonne table[])
 {
-	MYSQL* conn;
 	MYSQL_ROW row;
 	MYSQL_RES *res;
-	conn = mysql_init(0);
+	connexion = mysql_init(0);
 
-	conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
+	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
 
-	if (conn) {
+	if (connexion) {
 		puts("Successful connection to database!");
 
 		string query = "SELECT * FROM adherents";
 		const char* q = query.c_str();
-		qstate = mysql_query(conn, q);
+		qstate = mysql_query(connexion, q);
 		if (!qstate)
 		{
-			res = mysql_store_result(conn);
+			res = mysql_store_result(connexion);
 			while (row = mysql_fetch_row(res))
 			{
 				printf("ID: %s, Nom: %s, Prenom: %s mail: %s, nbr_ouvrages_max: %s, adresse: %s score: %s, mdp: %s, role: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]);
@@ -132,11 +114,11 @@ void  afficheAdherents(char * table)
 		}
 		else
 		{
-			cout << "Query failed: " << mysql_error(conn) << endl;
+			cout << "La requete a echoue : " << mysql_error(connexion) << endl;
 		}
 	}
 	else {
-		puts("Connection to database has failed!");
+		finish_with_error(connexion);
 	}
 	system("PAUSE");
 }
@@ -148,62 +130,13 @@ void finish_with_error(MYSQL *con)
 	exit(1);
 }
 
-groupe recuperationGroupe(user user) {
-
-	MYSQL *connexionMySQL = mysql_init(NULL);
-	mysql_options(connexionMySQL, MYSQL_READ_DEFAULT_GROUP, "");
-	groupe userGroupe;
-
-	if (connexionMySQL == NULL)
-	{
-		fprintf(stderr, "mysql_init() failed\n");
-		exit(1);
-	}
-
-	if (mysql_real_connect(connexionMySQL, "localhost", user.id, user.mdp,
-		"saintheque", 0, NULL, 0) == NULL)
-	{
-		finish_with_error(connexionMySQL);
-	}
-
-	if (mysql_query(connexionMySQL, "SELECT * FROM adhérant"))
-	{
-		finish_with_error(connexionMySQL);
-	}
-
-	MYSQL_RES *result = mysql_store_result(connexionMySQL);
-
-	if (result == NULL)
-	{
-		finish_with_error(connexionMySQL);
-	}
-
-	int num_fields = mysql_num_fields(result);
-
-	MYSQL_ROW row;
-
-	while ((row = mysql_fetch_row(result)))
-	{
-		for (int i = 0; i < num_fields; i++)
-		{
-			printf("%s ", row[i] ? row[i] : "NULL");
-		}
-		printf("\n");
-	}
-
-	mysql_free_result(result);
-	mysql_close(connexionMySQL);
-
-	exit(0);
-}
 
 
-void action(groupe groupe) {
-	if (groupe.role == "Client_Saintheque" || groupe.role == "Admin_Saintheque" || groupe.role == "Bibliotecaire_Saintheque") {
-		cout << "Bonjour " << groupe.role << " que souhaitez vous faire ?" << endl;
-		cout << " (1) Faire une recherche par livre ou par auteur " << endl;
-	}
-	else if (groupe.role == "Bibliotecaire_Saintheque" || groupe.role == "Admin_Saintheque") {
+void action(user utilisateur) {
+	char choix;
+	cout << "Bonjour " << utilisateur.role << " que souhaitez vous faire ?" << endl;
+	cout << " (1) Faire une recherche par livre ou par auteur " << endl;
+	if (utilisateur.role == "Bibliotecaire_Saintheque" || utilisateur.role == "Admin_Saintheque") {
 		cout << " (2) Ajouter un emprunt" << endl;
 		cout << " (3) Retourner un emprunt " << endl;
 		cout << " (4) Ajouter un ouvrage " << endl;
@@ -211,15 +144,72 @@ void action(groupe groupe) {
 		cout << " (6) Modifier un utilisateur " << endl;
 
 	}
-	else if (groupe.role == "Admin_Saintheque") {
+	else if (utilisateur.role == "Admin_Saintheque") {
 		cout << " (10) Faire des requêtes SQL " << endl;
 		cout << " (66) Executer un adhérant " << endl;
 	}
-	else {
-		cout << "Erreur de groupe non reconnu" << endl;
+	cin >> choix;
+	switch (choix)
+	{
+	case '1': 
+		break;
+	case '2': if (utilisateur.role == "Bibliotecaire_Saintheque" || utilisateur.role == "Admin_Saintheque") {
+
+	}
+		break;
+	case '3': if (utilisateur.role == "Bibliotecaire_Saintheque" || utilisateur.role == "Admin_Saintheque") {
+
+	}
+		break;
+	case '4': if (utilisateur.role == "Bibliotecaire_Saintheque" || utilisateur.role == "Admin_Saintheque") {
+
+	}
+		break;
+	case '5': if (utilisateur.role == "Bibliotecaire_Saintheque" || utilisateur.role == "Admin_Saintheque") {
+
+	}
+		break;
+	case '6': if (utilisateur.role == "Bibliotecaire_Saintheque" || utilisateur.role == "Admin_Saintheque") {
+
+	}
+		break;
+	case '10': if (utilisateur.role == "Admin_Saintheque") {
+		customQuery();
+	}
+		break; 
+	case '66': if (utilisateur.role == "Admin_Saintheque") {
+		executeOrder66();
+	}
+		break;
+	default: cout << "Erreur de choix non reconnu" << endl;
+		break;
 	}
 }
 
+void customQuery() {
+	char * query = new char;
+	cout << "Quel est votre requete ?" << endl;
+	cin >> query;
+	mysql_query(connexion, query);
+	//Déclaration des objets
+	MYSQL_RES *result = NULL;
+	MYSQL_ROW row;
+	int i = 1;
+
+	//On met le jeu de résultat dans le pointeur result
+	result = mysql_use_result(connexion);
+	//Tant qu'il y a encore un résultat ...
+	while ((row = mysql_fetch_row(result)))
+	{
+		printf("Resultat %ld\n", i);
+		i++;
+	}
+	//Libération du jeu de résultat
+	mysql_free_result(result);
+}
+void executeOrder66() {
+
+}
 
 
 
