@@ -12,6 +12,7 @@ int qstater;
 
 
 int wmain(){
+	srand(time(NULL));
 	MYSQL* conn;
 	MYSQL_ROW row;
 	MYSQL_RES *res;
@@ -31,7 +32,7 @@ int wmain(){
 			res = mysql_store_result(conn);
 			while (row = mysql_fetch_row(res))
 			{
-				printf("ID: %s, Nom: %s, Prenom: %s, mail: %s, nbr_ouvrages_max: %s, adresse: %s, score: %s, mdp: %s, role: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]);
+				printf("ID: %s -|- NOM : %s -|- PRENOM : %s -|- @MAIL : %s -|- ROLE : %s -|- LIMITE DE NOMBRE D'OUVRAGES : %s -|- ADRESSE : %s -|- SCORE : %s |-+ ADDED\n", row[0], row[1], row[2], row[3], row[5], row[6], row[7]);
 			}
 		}
 		else
@@ -45,6 +46,8 @@ int wmain(){
 	system("PAUSE");
 
 	search_saintheque();
+	system("PAUSE");
+	cout<<"add_err : "<<addDB_random_adherents(5) << endl;
 	system("PAUSE");
 
 return 0;

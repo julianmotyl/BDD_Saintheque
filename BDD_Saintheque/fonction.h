@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 typedef struct user {
 	const char * id;
@@ -15,6 +16,10 @@ bool connexionMySQL(char *, char *);
 groupe  recuperationGroupe(user);
 void action(groupe);
 void search_saintheque();
+bool addDB_random_adherents(unsigned int nb);
+string majuscule(string &chaine);
+string minuscule(string &chaine);
+string gename(const unsigned int MIN, const unsigned int MAX);
 
 
 

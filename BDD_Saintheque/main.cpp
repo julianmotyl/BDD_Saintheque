@@ -10,6 +10,7 @@ using namespace std;
 
 
 int main() {
+	srand(time(NULL));
 	cout << "Bienvenu à la Médiatheque de Saint-Etienne ! " << endl; // prints Bienvenu à la Médiatheque de Saint-Etienne !
 	printf("MySQL client version: %s\n", mysql_get_client_info());
 
