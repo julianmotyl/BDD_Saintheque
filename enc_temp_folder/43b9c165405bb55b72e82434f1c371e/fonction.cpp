@@ -272,20 +272,25 @@ void executeOrder66(user * utilisateur) {
 	MYSQL_ROW row;
 	MYSQL_RES *res;
 
-	string debutQuery = "DELETE FROM adherents where mail = \"";
+	string debutQuery = "SELECT role FROM adherents where mail = \"";
 	char * dbtQuery = new char[debutQuery.length() + 1];
 	strcpy(dbtQuery, debutQuery.c_str());
 
-	std::string id;
-	cin >> id;
+	std::string id = utilisateur->id;
 	const char * identifiant = id.c_str();
+
+	const char * motDePasse = utilisateur->mdp.c_str();
+	string interQuery = strcat(dbtQuery, utilisateur->id.c_str());
+	const char* intermedQuery;
 	if (connexion) {
 		string query = debutQuery + utilisateur->id + "\"";
 		const char* q = query.c_str();
 		qstate = mysql_query(connexion, q);
 		if (!qstate)
 		{
-			cout << "Ce sera fait mon Seigneur !" << endl;
+			res = mysql_store_result(connexion);
+			row = mysql_fetch_row(res);
+			utilisateur->role = row[0];
 		}
 		else
 		{
