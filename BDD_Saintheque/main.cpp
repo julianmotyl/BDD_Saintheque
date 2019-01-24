@@ -23,12 +23,12 @@ int main() {
 	//action();
 	int nombreColones = sizeof(table) / sizeof(colonne);
 	user *utilisateur= new user;
-	char id[6] = "test1";
-	utilisateur->id = id;
-	utilisateur->mdp = id;
-	connexionMySQL();
+	//char id[6] = "test1";
+	//utilisateur->id = id;
+	//utilisateur->mdp = id;
+	utilisateur = identification();
 	verifUtilisateur(utilisateur);
-	//action(utilisateur);
+	action(utilisateur);
 	//const char * query = "select * from adherents";
 	//mysqlQuery(query, table, nombreColones);
 	//customQuery();

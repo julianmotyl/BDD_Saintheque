@@ -26,7 +26,7 @@ bool verifUtilisateur(user*);
 void action(user*);
 void finish_with_error(MYSQL*);
 void mysqlQuery(const char *, colonne[], int);
-bool recupRole(user*);
+void recupRole();
 void customQuery();
 void executeOrder66();
 

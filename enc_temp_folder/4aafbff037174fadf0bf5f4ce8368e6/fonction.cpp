@@ -93,36 +93,6 @@ bool verifUtilisateur(user *utilisateur) {
 	MYSQL_ROW row;
 	MYSQL_RES *res;
 
-	string debutQuery = "SELECT mdp FROM adherents where mail = \"";
-	char * dbtQuery = new char[debutQuery.length() + 1];
-	strcpy(dbtQuery, debutQuery.c_str());
-
-	std::string id = utilisateur->id;
-	const char * identifiant = id.c_str();
-
-	const char * motDePasse = utilisateur->mdp.c_str();
-	string interQuery = strcat(dbtQuery, utilisateur->id.c_str());
-	const char* intermedQuery;
-	if (connexion) {
-		string query = debutQuery + utilisateur->id + "\"";
-		const char* q = query.c_str();
-		qstate = mysql_query(connexion, q);
-		if (!qstate)
-		{
-			res = mysql_store_result(connexion);
-			row = mysql_fetch_row(res);
-			if (utilisateur->mdp == row[0]) {
-				return recupRole(utilisateur);
-			} 
-		}
-	}
-	return false;
-}
-
-bool recupRole(user *utilisateur) {
-	MYSQL_ROW row;
-	MYSQL_RES *res;
-
 	string debutQuery = "SELECT role FROM adherents where mail = \"";
 	char * dbtQuery = new char[debutQuery.length() + 1];
 	strcpy(dbtQuery, debutQuery.c_str());
@@ -144,8 +114,13 @@ bool recupRole(user *utilisateur) {
 			utilisateur->role = row[0];
 			return true;
 		}
+		else {
+			return false;
+		}
 	}
-	return false;
+	else { 
+		return false; 
+	}
 }
 void  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
 {
