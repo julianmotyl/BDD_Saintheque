@@ -30,6 +30,11 @@ bool recupRole(user*);
 void customQuery();
 void executeOrder66();
 
+void searchSaintheque();
+bool addDBRandomUser(unsigned int nb);
+string majuscule(string &chaine);
+string minuscule(string &chaine);
+string gename(const unsigned int MIN, const unsigned int MAX);
 
 
 //TD des Listes

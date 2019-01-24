@@ -164,7 +164,7 @@ void  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
 				while ( i < nbrColonnes) {
 					printf(table[i].nom.c_str());
 					printf(" : ");
-					printf( " %s ," , row[table[i].numColone]);
+					printf( " %s, " , row[table[i].numColone]);
 					i++;
 				}
 				printf("\n");
@@ -187,10 +187,131 @@ void finish_with_error(MYSQL *con)
 	exit(1);
 }
 
+string gename(const unsigned int MIN, const unsigned int MAX) {
+	/*std::*/string acceptes = "abcdefghijklmnopqrstuvwyz";
+	acceptes += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	/*std::*/string filename = "";
+	size_t taille = (rand() % (MAX - MIN) + 1) + MIN;
+	size_t pos = (rand() % (26 - 51) + 1) + 26;//j'ai 26 caractères majuscules dans acceptes
+	filename += acceptes[pos];
+	for (size_t i = 0; i < taille - 1; i++)
+	{
+		pos = rand() % 25;//j'ai 26 caractères minuscules dans acceptes
+		filename += acceptes[pos];
+	}
+	//char *cstr = new char[filename.length() + 1];
+	//strcpy(cstr, filename.c_str());
+	return filename;
+}
+
+string minuscule(string &chaine)
+{
+	for (int i = 0; i < chaine.size(); i++)
+	{
+		chaine[i] = tolower(chaine[i]);
+	}
+	return chaine;
+}
+
+string majuscule(string &chaine)
+{
+	for (int i = 0; i < chaine.size(); i++)
+	{
+		chaine[i] = toupper(chaine[i]);
+	}
+	return chaine;
+}
+
+bool addDBRandomUser(unsigned int nb) {
+
+	bool retour = 1;
+	MYSQL* conn;
+	MYSQL_ROW row;
+	MYSQL_RES *res;
+	conn = mysql_init(0);
+
+	//conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
+
+
+	if (conn) {
+		puts("Successful connection to database!");
+		for (int i = 0; i++; i < nb) {
+			string nom = gename(3, 8);
+			string rue = gename(2, 5);
+			size_t nb_ouvrage = 0;//(rand() % (10 - 0) + 1) + 0;
+			size_t num_rue = (rand() % (99 - 1) + 1) + 1;
+			size_t groupe = (rand() % (2 - 0) + 1) + 0;
+			size_t score = 100;//(rand() % (500 - 0) + 1) + 0;
+			string prenom = gename(3, 6);
+			const char * grouptab[3][2] = { {"admin_saintheque","admin"},{"bibliothecaire_saintheque","bibliothecaire"},{"client_saintheque","client"} };
+			string query = "INSERT INTO `saintheque`.`adherents` (`nom`, `prénom`, `mail`, `mdp`, `role`, `nbr_ouvrages_max`, `adresse`, `score`) VALUES('" + nom + "', '" + prenom + "', '" + minuscule(prenom) + "." + minuscule(nom) + "@mail.fr', '" + majuscule(nom).substr(0, 1) + majuscule(prenom).substr(0, 2) + majuscule(nom).substr(majuscule(nom).size() - 1, majuscule(nom).size()) + "', '" + grouptab[groupe][0] + "', '" + char(nb_ouvrage) + "', '" + char(num_rue) + " rue de " + rue + ", 42000 Saint-Etienne, France', '" + char(score) + "');";
+			const char* q = query.c_str();
+			qstate = mysql_query(conn, q);
+			if (!qstate)
+			{
+				res = mysql_store_result(conn);
+				while (row = mysql_fetch_row(res))
+				{
+					printf("ID: %s -|- NOM : %s -|- PRENOM : %s -|- @MAIL : %s -|- ROLE : %s -|- LIMITE DE NOMBRE D'OUVRAGES : %s -|- ADRESSE : %s -|- SCORE : %s |-+ ADDED\n", row[0], row[1], row[2], row[3], row[5], row[6], row[7]);
+				}
+				retour = 0;
+			}
+			else
+			{
+				cout << "Query failed: " << mysql_error(conn) << endl;
+				retour = 1;
+			}
+		}
+	}
+	else {
+		puts("Connection to database has failed!");
+	}
+	system("PAUSE");
+
+	return retour;
+}
+
+void searchSaintheque() {
+	unsigned int choix;
+	string search;
+	bool notok = true;
+
+	string query;
+	while (notok) {
+		cout << "Veuillez rentrer le nom de l'ouvrage ou de l'auteur à rechercher ? " << endl << ": ";
+		getline(cin, search);
+		cout << "Souhaitez-vous rechercher un ouvrage (1) ou un auteur (2) ? " << endl << ": ";
+		cin >> choix;
+		switch (choix)
+		{
+		case '1':
+			query = "SELECT * FROM ouvrage WHERE titre SOUNDS LIKE " + search;
+			printf("ID: %s, Titre: %s, Genre: %s Auteur: %s, Date de parution: %s, Durée: %s, Type: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6]);
+			break;
+		case '2':
+			query = "SELECT * FROM auteur WHERE nom SOUNDS LIKE " + search.substr(search.find(' ') + 1, 999999) + " AND WHERE prenom SOUNDS LIKE " + search.substr(1, search.find(' ') - 1);
+			printf("ID: %s, Nom: %s, Prenom: %s, Date de naissance: %s, Date de décès: %s, Biographie: %s\n", row[0], row[1], row[2], row[3], row[4], row[5]);
+
+			break;
+		case '3':
+			notok = false;
+			break;
+		default: cout << "Erreur de choix : non reconnu" << endl;
+			break;
+		}
+		char * chQuery = new char[query.length() + 1];
+		strcpy(chQuery, query.c_str());
+		mysqlQuery(chQuery, );
+		system("PAUSE");
+	}
+
+}
+
 void action(user *utilisateur) {
 	char choix;
 	cout << "Bonjour " << utilisateur->id << " que souhaitez vous faire ?" << endl;
-	cout << " (1) Faire une recherche par livre ou par auteur " << endl;
+	cout << " (1) Faire une recherche par ouvrage ou par auteur " << endl;
 	if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
 		cout << " (2) Ajouter un emprunt" << endl;
 		cout << " (3) Retourner un emprunt " << endl;
@@ -236,7 +357,7 @@ void action(user *utilisateur) {
 		executeOrder66();
 	}
 		break;
-	default: cout << "Erreur de choix non reconnu" << endl;
+	default: cout << "Erreur de choix : non reconnu" << endl;
 		break;
 	}
 }
