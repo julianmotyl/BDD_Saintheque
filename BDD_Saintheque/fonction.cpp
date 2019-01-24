@@ -147,7 +147,7 @@ bool recupRole(user *utilisateur) {
 	}
 	return false;
 }
-void  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
+MYSQL_ROW  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
 {
 	MYSQL_ROW row;
 	MYSQL_RES *res;
@@ -178,6 +178,8 @@ void  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
 	else {
 		finish_with_error(connexion);
 	}
+
+	return row;
 }
 
 void finish_with_error(MYSQL *con)
@@ -277,24 +279,55 @@ void searchSaintheque() {
 	string search;
 	bool notok = true;
 
+	colonne table[6];
+	int nombreColones = sizeof(table) / sizeof(colonne);
 	string query;
 	while (notok) {
-		cout << "Veuillez rentrer le nom de l'ouvrage ou de l'auteur à rechercher ? " << endl << ": ";
-		getline(cin, search);
-		cout << "Souhaitez-vous rechercher un ouvrage (1) ou un auteur (2) ? " << endl << ": ";
+		cout << "Souhaitez-vous rechercher un ouvrage..." << endl;
+		cout << "(1) ...par son titre ? [titre]"<< endl;
+		cout << "(2) ...par son auteur ? [prenom nom]" << endl;
+		cout << "(3) ...par sa date de parution ? [dd/mm/yyyy]" << endl;
+		cout << "(0) QUITTER" << endl;
 		cin >> choix;
+		cout << "Veuillez rentrer le(s) mot(s) clé(s) pour la recherche ? " << endl << ": ";
+		getline(cin, search);
 		switch (choix)
 		{
-		case '1':
+		case 1:
 			query = "SELECT * FROM ouvrage WHERE titre SOUNDS LIKE " + search;
-			printf("ID: %s, Titre: %s, Genre: %s Auteur: %s, Date de parution: %s, Durée: %s, Type: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6]);
-			break;
-		case '2':
-			query = "SELECT * FROM auteur WHERE nom SOUNDS LIKE " + search.substr(search.find(' ') + 1, 999999) + " AND WHERE prenom SOUNDS LIKE " + search.substr(1, search.find(' ') - 1);
-			printf("ID: %s, Nom: %s, Prenom: %s, Date de naissance: %s, Date de décès: %s, Biographie: %s\n", row[0], row[1], row[2], row[3], row[4], row[5]);
 
+			table[0].nom = "TITRE";
+			table[0].numColone = 1;
+			table[1].nom = "GENRE";
+			table[1].numColone = 2;
+			table[2].nom = "AUTEUR";
+			table[2].numColone = 3;
+			table[3].nom = "DATE DE PARUTION";
+			table[3].numColone = 4;
+			table[4].nom = "DUREE";
+			table[4].numColone = 5; 
+			table[5].nom = "TYPE";
+			table[5].numColone = 6;
 			break;
-		case '3':
+		case 2:
+			query = "SELECT * FROM ouvrage WHERE nom SOUNDS LIKE " + search.substr(search.find(' ') + 1, 999999) + " AND WHERE prenom SOUNDS LIKE " + search.substr(1, search.find(' ') - 1);
+			table[0].nom = "NOM";
+			table[0].numColone = 1;
+			table[1].nom = "PRENOM";
+			table[1].numColone = 2;
+			table[2].nom = "GENRE";
+			table[2].numColone = 3;
+			table[3].nom = "DATE DE NAISSANCE";
+			table[3].numColone = 4;
+			table[4].nom = "DATE DE DECES";
+			table[4].numColone = 5;
+			table[5].nom = "BIOGRAPHIE";
+			table[5].numColone = 6;
+			break;
+		case 3:
+			notok = false;
+			break;
+		case 0:
 			notok = false;
 			break;
 		default: cout << "Erreur de choix : non reconnu" << endl;
@@ -302,7 +335,7 @@ void searchSaintheque() {
 		}
 		char * chQuery = new char[query.length() + 1];
 		strcpy(chQuery, query.c_str());
-		mysqlQuery(chQuery, );
+		mysqlQuery(chQuery, table, nombreColones);
 		system("PAUSE");
 	}
 
