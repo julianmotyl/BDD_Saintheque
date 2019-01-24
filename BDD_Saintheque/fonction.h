@@ -1,24 +1,38 @@
 #pragma once
+#include <string>
 
 typedef struct user {
-	const char * id;
-	const char * mdp;
+	std::string id;
+	std::string mdp;
+	std::string role;
 }user;
 
 typedef struct groupe {
-	const char * role;
-	const char * mdp;
+	std::string role;
+	std::string mdp;
 }groupe;
 
-void identification();
-bool connexionMySQL(char *, char *);
-groupe  recuperationGroupe(user);
-void action(groupe);
+typedef struct colonne {
+	std::string nom;
+	int numColone;
+}colonne;
+
+static MYSQL* connexion; //On conserve la même connexion pendant toute la durée du programme
+//static user utilisateur; //On conserve aussi le mmême urilisateur
+
+user* identification();
+bool connexionMySQL();
+bool verifUtilisateur(user*);
+void action(user*);
+void finish_with_error(MYSQL*);
+void mysqlQuery(const char *, colonne[], int);
+bool recupRole(user*);
+void customQuery();
+void executeOrder66();
 
 
 
-
-
+//TD des Listes
 
 typedef struct maillon {
 
@@ -28,6 +42,7 @@ typedef struct maillon {
 } maillon;
 
 typedef maillon *list;
+
 
 int factorielle(int n);
 int ** matrixInt(const int ROW, const int COL, const int MIN, const int MAX);
