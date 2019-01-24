@@ -1,18 +1,19 @@
 #pragma once
+#include <string>
 
 typedef struct user {
-	char * id;
-	char * mdp;
-	char * role;
+	std::string id;
+	std::string mdp;
+	std::string role;
 }user;
 
 typedef struct groupe {
-	const char * role;
-	const char * mdp;
+	std::string role;
+	std::string mdp;
 }groupe;
 
 typedef struct colonne {
-	const char * nom;
+	std::string nom;
 	int numColone;
 }colonne;
 
@@ -20,11 +21,12 @@ static MYSQL* connexion; //On conserve la même connexion pendant toute la durée 
 static user utilisateur; //On conserve aussi le mmême urilisateur
 
 void identification();
-bool connexionMySQL(const char *, const char *);
-void action();
+bool connexionMySQL();
+bool verifUtilisateur(user*);
+void action(user*);
 void finish_with_error(MYSQL*);
-void mysqlQuery(colonne[]);
-
+void mysqlQuery(const char *, colonne[], int);
+void recupRole();
 void customQuery();
 void executeOrder66();
 

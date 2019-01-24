@@ -2,7 +2,7 @@
 #include <mysql.h>
 #include <time.h>
 #include <math.h>
-
+#include <string>
 #include "fonction.h"
 
 using namespace std;
@@ -13,7 +13,7 @@ int qstate;
 void identification() {
 	char next;
 	bool notok = true;
-	char logid[55], logpwd[55];
+	string logid, logpwd;
 
 	cout << "................................................" << endl;
 	cout << "       _________" << endl;
@@ -50,12 +50,12 @@ void identification() {
 		cin >> logpwd;
 		utilisateur.mdp = logpwd;
 		cout << endl << "<...> Connexion a l'interface de l'utilisateur '" << logid << "' <...>" << endl;
-		condition = connexionMySQL(logid, logpwd);
+		condition = connexionMySQL();
 		if (!condition) {
 			cout << "Echec de connexion à la base de données, souhaitez vous réessayer ? (o/n)" << endl;
-			char retry;
+			string retry;
 			cin >> retry;
-				if (retry == 'o') {
+				if (retry == "o") {
 					condition = false;
 				}
 				else {
@@ -66,10 +66,10 @@ void identification() {
 	}
 }
 
-bool connexionMySQL(const char * identifiant, const char  * motdepasse) {
+bool connexionMySQL() {
 
 	connexion = mysql_init(0);
-	connexion = mysql_real_connect(connexion, "localhost", identifiant, motdepasse, "sainteque", 3306, NULL, 0);
+	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
 	if (connexion){
 		cout << "La connexion a fonctionné !" << endl;
 		return true;
@@ -80,26 +80,60 @@ bool connexionMySQL(const char * identifiant, const char  * motdepasse) {
 	}
 }
 
-void  mysqlQuery(colonne table[])
-{
+bool verifUtilisateur(user *utilisateur) {
 	MYSQL_ROW row;
 	MYSQL_RES *res;
-	connexion = mysql_init(0);
 
-	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
+	string debutQuery = "SELECT role FROM adherents where mail = \"";
+	char * dbtQuery = new char[debutQuery.length() + 1];
+	strcpy(dbtQuery, debutQuery.c_str());
 
+	std::string id = utilisateur->id;
+	const char * identifiant = id.c_str();
+
+	const char * motDePasse = utilisateur->mdp.c_str();
+	string interQuery = strcat(dbtQuery, utilisateur->id.c_str());
+	const char* intermedQuery;
 	if (connexion) {
-		puts("Successful connection to database!");
-
-		string query = "SELECT * FROM adherents";
+		string query = debutQuery + utilisateur->id + "\"";
 		const char* q = query.c_str();
 		qstate = mysql_query(connexion, q);
 		if (!qstate)
 		{
 			res = mysql_store_result(connexion);
+			row = mysql_fetch_row(res);
+			utilisateur->role = row[0];
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else { 
+		return false; 
+	}
+}
+void  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
+{
+	MYSQL_ROW row;
+	MYSQL_RES *res;
+
+
+	if (connexion) {
+		qstate = mysql_query(connexion, query);
+		if (!qstate)
+		{
+			res = mysql_store_result(connexion);
 			while (row = mysql_fetch_row(res))
-			{
-				printf("ID: %s, Nom: %s, Prenom: %s mail: %s, nbr_ouvrages_max: %s, adresse: %s score: %s, mdp: %s, role: %s\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]);
+			{	
+				int i = 0;
+				while ( i < nbrColonnes) {
+					printf(table[i].nom.c_str());
+					printf(" : ");
+					printf( " %s ," , row[table[i].numColone]);
+					i++;
+				}
+				printf("\n");
 			}
 		}
 		else
@@ -110,7 +144,6 @@ void  mysqlQuery(colonne table[])
 	else {
 		finish_with_error(connexion);
 	}
-	system("PAUSE");
 }
 
 void finish_with_error(MYSQL *con)
@@ -120,11 +153,32 @@ void finish_with_error(MYSQL *con)
 	exit(1);
 }
 
+void recupRole() {
+	MYSQL_ROW row;
+	MYSQL_RES *res;
 
+	char debutQuery[68] = "SELECT role FROM adherents select role from adherents where mail = ";
+	if (connexion) {
+		string query = strcat(debutQuery , utilisateur.id.c_str());
+		const char* q = query.c_str();
+		qstate = mysql_query(connexion, q);
+		if (!qstate)
+		{
+			res = mysql_store_result(connexion);
+			while (row = mysql_fetch_row(res))
+			{
+				utilisateur.role = row[0];
+			}
+		}
+	}
+	else {
+		finish_with_error(connexion);
+	}
+}
 
-void action() {
+void action(user utilisateur) {
 	char choix;
-	cout << "Bonjour " << utilisateur.id << " que souhaitez vous faire ?" << endl;
+	cout << "Bonjour " << &utilisateur.id << " que souhaitez vous faire ?" << endl;
 	cout << " (1) Faire une recherche par livre ou par auteur " << endl;
 	if (utilisateur.role == "Bibliotecaire_Saintheque" || utilisateur.role == "Admin_Saintheque") {
 		cout << " (2) Ajouter un emprunt" << endl;
@@ -176,11 +230,11 @@ void action() {
 	}
 }
 
-void customQuery() {
-	char * query = new char;
+void customQuery() {/*
+	string query;
 	cout << "Quel est votre requete ?" << endl;
 	cin >> query;
-	mysql_query(connexion, query);
+	mysql_query(connexion, query.c_str());
 	//Déclaration des objets
 	MYSQL_RES *result = NULL;
 	MYSQL_ROW row;
@@ -189,13 +243,13 @@ void customQuery() {
 	//On met le jeu de résultat dans le pointeur result
 	result = mysql_use_result(connexion);
 	//Tant qu'il y a encore un résultat ...
-	while ((row = mysql_fetch_row(result)))
+	//while ((row = mysql_fetch_row(result)))
 	{
 		printf("Resultat %ld\n", i);
 		i++;
 	}
 	//Libération du jeu de résultat
-	mysql_free_result(result);
+	mysql_free_result(result);*/
 }
 void executeOrder66() {
 
