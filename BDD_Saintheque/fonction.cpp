@@ -291,27 +291,15 @@ void searchSaintheque() {
 		cin >> choix;
 		cout << "Veuillez rentrer le(s) mot(s) clé(s) pour la recherche ? " << endl << ": ";
 		getline(cin, search);
+		//afficher les mediatheques et nombre d'exemplaires
 		switch (choix)
 		{
 		case 1:
-			query = "SELECT * FROM ouvrage WHERE titre SOUNDS LIKE " + search;
-
-			table[0].nom = "TITRE";
-			table[0].numColone = 1;
-			table[1].nom = "GENRE";
-			table[1].numColone = 2;
-			table[2].nom = "AUTEUR";
-			table[2].numColone = 3;
-			table[3].nom = "DATE DE PARUTION";
-			table[3].numColone = 4;
-			table[4].nom = "DUREE";
-			table[4].numColone = 5; 
-			table[5].nom = "TYPE";
-			table[5].numColone = 6;
+			query = "SELECT ouvrage.*,COUNT(exemplaires.id_ouvrage),COUNT(mediatheques.id_mediatheque) FROM ouvrage INNER JOIN exemplaires ON ouvrage.id_ouvrage = exemplaires.id_ouvrage INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheque WHERE ouvrage.titre SOUNDS LIKE '" + search +"';";
 			break;
 		case 2:
-			query = "SELECT * FROM ouvrage WHERE nom SOUNDS LIKE " + search.substr(search.find(' ') + 1, 999999) + " AND WHERE prenom SOUNDS LIKE " + search.substr(1, search.find(' ') - 1);
-			table[0].nom = "NOM";
+			query = "SELECT * FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur WHERE auteur.nom SOUNDS LIKE '" + search.substr(search.find(' ') + 1, 999999) + "' AND WHERE auteur.prenom SOUNDS LIKE '" + search.substr(1, search.find(' ') - 1) + "';";
+			/*table[0].nom = "NOM";
 			table[0].numColone = 1;
 			table[1].nom = "PRENOM";
 			table[1].numColone = 2;
@@ -322,17 +310,29 @@ void searchSaintheque() {
 			table[4].nom = "DATE DE DECES";
 			table[4].numColone = 5;
 			table[5].nom = "BIOGRAPHIE";
-			table[5].numColone = 6;
+			table[5].numColone = 6;*/
 			break;
 		case 3:
-			notok = false;
+			query = "SELECT * FROM ouvrage WHERE date_parution='" + search +"';";
 			break;
 		case 0:
 			notok = false;
 			break;
-		default: cout << "Erreur de choix : non reconnu" << endl;
+		default: cout << "/!\ Erreur de choix : non reconnu /!\\" << endl;
 			break;
 		}
+		table[0].nom = "TITRE";
+		table[0].numColone = 1;
+		table[1].nom = "GENRE";
+		table[1].numColone = 2;
+		table[2].nom = "AUTEUR";
+		table[2].numColone = 3;
+		table[3].nom = "DATE DE PARUTION";
+		table[3].numColone = 4;
+		table[4].nom = "DUREE";
+		table[4].numColone = 5;
+		table[5].nom = "TYPE";
+		table[5].numColone = 6;
 		char * chQuery = new char[query.length() + 1];
 		strcpy(chQuery, query.c_str());
 		mysqlQuery(chQuery, table, nombreColones);
