@@ -466,7 +466,7 @@ void executeOrder66(user * utilisateur) {
 void importFile() {
 	string debutQuery = "load data local infile '";
 	string nomFichier;
-	cout << "Quel est le nom du fichier (incluez bien l'extenssion)";
+	cout << "Quel est le nom du fichier (incluez bien l'extension)";
 	cin >> nomFichier;
 	string milieuQuery = "' into table ouvrages fields terminated by '";
 	string separateurDeChamps;
