@@ -69,7 +69,7 @@ CREATE TABLE `auteur` (
   KEY `genre_idxx` (`id_genre`),
   KEY `add_genre_idx` (`id_genre`),
   CONSTRAINT `add_genre` FOREIGN KEY (`id_genre`) REFERENCES `genre` (`id_genre`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,7 +78,7 @@ CREATE TABLE `auteur` (
 
 LOCK TABLES `auteur` WRITE;
 /*!40000 ALTER TABLE `auteur` DISABLE KEYS */;
-INSERT INTO `auteur` VALUES (1,'Camus','Albert','1913-11-07','1960-01-04',NULL,1);
+INSERT INTO `auteur` VALUES (1,'Camus','Albert','1913-11-07','1960-01-04',NULL,1),(2,'Hugo','Victor','1802-02-26','1885-05-22',NULL,2),(3,'Geffroy','Isabelle','1980-05-01',NULL,'Zaz',5),(4,'Besson','Luc','1959-03-18',NULL,NULL,7);
 /*!40000 ALTER TABLE `auteur` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -272,4 +272,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-25 23:50:26
+-- Dump completed on 2019-01-26  0:12:05
