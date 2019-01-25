@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <fstream> 
+#include <vector> 
 
 typedef struct user {
 	std::string id;
@@ -32,10 +34,12 @@ void executeOrder66();
 
 void searchSaintheque();
 bool addDBRandomUser(unsigned int nb);
-std::string majuscule(std::string &chaine);
-std::string minuscule(std::string &chaine);
+std::string majuscule(std::string chaine);
+std::string minuscule(std::string chaine);
 std::string gename(const unsigned int MIN, const unsigned int MAX);
-
+std::vector <std::string> lectureFile(std::string name);
+std::vector<std::string> split(const std::string &str, const std::string &separator);
+bool insertFile(std::string file, std::string table);
 
 //TD des Listes
 

@@ -3,6 +3,8 @@
 #include <time.h>
 #include <math.h>
 #include <string>
+#include <fstream> 
+#include <vector> 
 #include "fonction.h"
 
 using namespace std;
@@ -147,6 +149,7 @@ bool recupRole(user *utilisateur) {
 	}
 	return false;
 }
+
 MYSQL_ROW  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
 {
 	MYSQL_ROW row = nullptr;
@@ -190,23 +193,33 @@ void finish_with_error(MYSQL *con)
 }
 
 string gename(const unsigned int MIN, const unsigned int MAX) {
-	/*std::*/string acceptes = "abcdefghijklmnopqrstuvwyz";
-	acceptes += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	/*std::*/string acceptes = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	string consonnes = "bcdfghjklmnpqrstvwxz";
+	string voyelles = "aeiouy";
+	bool alt = true;
 	/*std::*/string filename = "";
 	size_t taille = (rand() % (MAX - MIN) + 1) + MIN;
-	size_t pos = (rand() % (26 - 51) + 1) + 26;//j'ai 26 caractères majuscules dans acceptes
+	size_t pos = rand() % 26;//j'ai 26 caractères majuscules dans acceptes
 	filename += acceptes[pos];
 	for (size_t i = 0; i < taille - 1; i++)
 	{
-		pos = rand() % 25;//j'ai 26 caractères minuscules dans acceptes
-		filename += acceptes[pos];
+		if (alt) {
+			pos = rand() % 5;//j'ai 6 voyelles
+			filename += voyelles[pos];
+			alt = false;
+		}
+		else {
+			pos = rand() % 20;//j'ai 20 consonnes
+			filename += consonnes[pos];
+			alt = true;
+		}
 	}
 	//char *cstr = new char[filename.length() + 1];
 	//strcpy(cstr, filename.c_str());
 	return filename;
 }
 
-string minuscule(string &chaine)
+string minuscule(string chaine)
 {
 	for (int i = 0; i < chaine.size(); i++)
 	{
@@ -215,7 +228,7 @@ string minuscule(string &chaine)
 	return chaine;
 }
 
-string majuscule(string &chaine)
+string majuscule(string chaine)
 {
 	for (int i = 0; i < chaine.size(); i++)
 	{
@@ -228,7 +241,7 @@ bool addDBRandomUser(unsigned int nb) {
 
 	bool retour = 1;
 	MYSQL* conn;
-	MYSQL_ROW row;
+	MYSQL_ROW row = nullptr;
 	MYSQL_RES *res;
 	conn = mysql_init(0);
 
@@ -237,26 +250,26 @@ bool addDBRandomUser(unsigned int nb) {
 
 
 	if (conn) {
-		puts("Successful connection to database!");
+		puts("\nSuccessful connection to database!\n");
 		for (unsigned int i = 0; i < nb; i++) {
 			string nom = gename(3, 8);
 			string rue = gename(2, 5);
-			size_t nb_ouvrage = 0;//(rand() % (10 - 0) + 1) + 0;
-			size_t num_rue = (rand() % (99 - 1) + 1) + 1;
-			size_t groupe = (rand() % (2 - 0) + 1) + 0;
-			size_t score = 100;//(rand() % (500 - 0) + 1) + 0;
+			unsigned int nb_ouvrage = (rand() % (5 - 0) + 1) + 0;
+			unsigned int num_rue = (rand() % (99 - 1) + 1) + 1;
+			unsigned int groupe = rand() % 4;
+			unsigned int score = 100;//(rand() % (500 - 0) + 1) + 0;
 			string prenom = gename(3, 6);
-			const char * grouptab[3][2] = { {"admin_saintheque","admin"},{"bibliothecaire_saintheque","bibliothecaire"},{"client_saintheque","client"} };
-			string query = "INSERT INTO `saintheque`.`adherents` (`nom`, `prénom`, `mail`, `mdp`, `role`, `nbr_ouvrages_max`, `adresse`, `score`) VALUES('" + nom + "', '" + prenom + "', '" + minuscule(prenom) + "." + minuscule(nom) + "@mail.fr', '" + majuscule(nom).substr(0, 1) + majuscule(prenom).substr(0, 2) + majuscule(nom).substr(majuscule(nom).size() - 1, majuscule(nom).size()) + "', '" + grouptab[groupe][0] + "', '" + char(nb_ouvrage) + "', '" + char(num_rue) + " rue de " + rue + ", 42000 Saint-Etienne, France', '" + char(score) + "');";
+			const char * grouptab[4][2] = { {"admin_saintheque","admin"},{"client_saintheque","client"},{"bibliothecaire_saintheque","bibliothecaire"},{"client_saintheque","client"} };
+			string query = "INSERT INTO `saintheque`.`adherents` (`nom`, `prenom`, `mail`, `mdp`, `role`, `nbr_ouvrages_max`, `adresse`, `score`) VALUES('" + nom + "', '" + prenom + "', '" + minuscule(prenom) + "." + minuscule(nom) + "@mail.fr', '" + majuscule(nom).substr(0, 1) + majuscule(prenom).substr(0, 2) + majuscule(nom).substr(majuscule(nom).size() - 1, majuscule(nom).size()) + "', '" + grouptab[groupe][0] + "', '" + to_string(nb_ouvrage) + "', '" + to_string(num_rue) + " rue de " + rue + ", 42000 Saint-Etienne, France', '" + to_string(score) + "');";
+			cout << query <<endl;
+			//INSERT INTO `saintheque`.`adherents` (`nom`, `prenom`, `mail`, `mdp`, `adresse`, `score`) VALUES('Gonga', 'Jérôme', 'jerome.gonga@mail.fr', 'GJEA', '2 avenue Duroy, 42000 Saint-Etienne, France', '200');
+
 			const char* q = query.c_str();
 			qstate = mysql_query(conn, q);
 			if (!qstate)
 			{
 				res = mysql_store_result(conn);
-				while (row = mysql_fetch_row(res))
-				{
-					printf("ID: %s -|- NOM : %s -|- PRENOM : %s -|- @MAIL : %s -|- ROLE : %s -|- LIMITE DE NOMBRE D'OUVRAGES : %s -|- ADRESSE : %s -|- SCORE : %s |-+ ADDED\n", row[0], row[1], row[2], row[3], row[5], row[6], row[7], row[8]);
-				}
+				cout << "|->+ ADDED\n"<<endl;
 				retour = 0;
 			}
 			else
@@ -268,6 +281,79 @@ bool addDBRandomUser(unsigned int nb) {
 	}
 	else {
 		puts("Connection to database has failed!");
+	}
+	system("PAUSE");
+
+	return retour;
+}
+
+vector<string> split(const string &str, const string &separator)
+{
+	vector<string> strVect; // pour la valeur retour
+	if (str.empty())
+		return strVect; // vecteur vide
+
+	int pos = 0;
+	size_t size;
+	do
+	{
+		size = str.find(separator, pos);
+		if (size != string::npos)
+		{
+			strVect.push_back(str.substr(pos, size - pos));
+			pos = size + 1;
+		}
+		else
+			strVect.push_back(str.substr(pos, str.size()));
+	} while (size != string::npos);
+
+	return strVect;
+}
+
+bool insertFile(string file, string table) {
+	//le fichier doit comprendre le même nombre de colonne que la table de la base de données (séparées par des tabulations)
+	bool retour = 0;
+	MYSQL* conn;
+	MYSQL_ROW row = nullptr;
+	MYSQL_RES *res;
+	conn = mysql_init(0);
+
+	//Choisir sa base de données !!
+	//conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
+
+
+	if (conn) {
+		puts("\nSuccessful connection to database!\n");
+		vector <string> monTableau = lectureFile(file);
+		cout << "[i] Ajout du contenu du fichier '" + file + ".txt' dans la table '" + table + "' [i]" << endl;
+		for (unsigned int i = 0; i < monTableau.size(); i++)
+		{
+			vector <string> tempRow = split(monTableau[i], "\t");
+			string query = "INSERT INTO `saintheque`.`" + table + "` VALUES(";
+			for (unsigned int j = 0; j < tempRow.size()-1; j++) {
+				query += "'" + tempRow[j] + "',";
+			}
+			query += "'" + tempRow[tempRow.size() - 1] + "');";
+			cout << query << endl;
+			const char* q = query.c_str();
+			qstate = mysql_query(conn, q);
+			if (!qstate)
+			{
+				res = mysql_store_result(conn);
+				cout << "|->+ ADDED\n" << endl;
+				retour = 0 xor retour;
+			}
+			else
+			{
+				cout << "Query failed: " << mysql_error(conn) << endl;
+				retour = 1;
+			}
+		}
+	}
+	else {
+		puts("Connection to database has failed!");
+		retour = 1;
 	}
 	system("PAUSE");
 
@@ -286,7 +372,7 @@ void searchSaintheque() {
 		cout << "Souhaitez-vous rechercher un ouvrage..." << endl;
 		cout << "(1) ...par son titre ? [titre]"<< endl;
 		cout << "(2) ...par son auteur ? [prenom nom]" << endl;
-		cout << "(3) ...par sa date de parution ? [dd/mm/yyyy]" << endl;
+		cout << "(3) ...par sa date de parution ? [yyyy-mm-dd]" << endl;
 		cout << "(0) QUITTER" << endl;
 		cin >> choix;
 		cout << "Veuillez rentrer le(s) mot(s) clé(s) pour la recherche ? " << endl << ": ";
@@ -393,6 +479,26 @@ void action(user *utilisateur) {
 	default: cout << "Erreur de choix : non reconnu" << endl;
 		break;
 	}
+}
+
+vector <string> lectureFile(string name) {
+	fstream fichier(name+".txt");
+	vector <string> monTableau;
+	if (!fichier)
+		cout << name + ".txt : fichier inexistant /!\\";
+	else {
+		bool continuer = true;
+		while (!fichier.eof())
+		{
+			monTableau.push_back("");//creation d'une ligne vide 
+			getline(fichier, monTableau.back());//lecture d'une ligne du fichier 
+			int ligne = monTableau.size() - 1;//je recupere la taille du tableau (-1 pour la ligne 0) 
+			if (monTableau[ligne].empty())//si la ligne est vide
+				monTableau.pop_back();//on la retire du tableau 
+		}
+		cout << "Nombre de lignes du fichier '"+name+".txt' : " << monTableau.size() << endl;//j'affiche le nombre de lignes pour test 
+	}
+	return monTableau;
 }
 
 void customQuery() {/*

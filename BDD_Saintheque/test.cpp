@@ -3,7 +3,8 @@
 #include <string>
 #include <time.h>
 #include <math.h>
-
+#include <fstream> 
+#include <vector> 
 #include "fonction.h"
 
 using namespace std;
@@ -32,7 +33,7 @@ int wmain(){
 			res = mysql_store_result(conn);
  			while (row = mysql_fetch_row(res))
 			{
-				printf("ID: %s -|- NOM : %s -|- PRENOM : %s -|- @MAIL : %s -|- ROLE : %s -|- LIMITE DE NOMBRE D'OUVRAGES : %s -|- ADRESSE : %s -|- SCORE : %s |-+ ADDED\n", row[0], row[1], row[2], row[3], row[5], row[6], row[7], row[8]);
+				printf("\nID: %s -|- NOM : %s -|- PRENOM : %s -|- @MAIL : %s -|- ROLE : %s -|- LIMITE DE NOMBRE D'OUVRAGES : %s -|- ADRESSE : %s -|- SCORE : %s |-\n", row[0], row[1], row[2], row[3], row[5], row[6], row[7], row[8]);
 			}
 		}
 		else
@@ -44,9 +45,11 @@ int wmain(){
 		puts("Connection to database has failed!");
 	}
 	system("PAUSE");
-
+	addDBRandomUser(3);
+	/*for(unsigned int i = 0;i< lectureFile("test").size();i++)
+		cout << lectureFile("test")[i]<<endl;*/
 	//searchSaintheque();
-	//system("PAUSE");
+	system("PAUSE");
 	//cout<<"add_err : "<<addDBRandomUser(5) << endl;
 	//system("PAUSE");
 
