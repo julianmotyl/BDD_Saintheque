@@ -35,9 +35,9 @@ void empruntOuvrage();
 
 void searchSaintheque();
 bool addDBRandomUser(unsigned int nb);
-string majuscule(string &chaine);
-string minuscule(string &chaine);
-string gename(const unsigned int MIN, const unsigned int MAX);
+std::string majuscule(std::string &chaine);
+std::string minuscule(std::string &chaine);
+std::string gename(const unsigned int MIN, const unsigned int MAX);
 
 
 //TD des Listes

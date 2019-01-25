@@ -102,7 +102,7 @@ bool verifUtilisateur(user *utilisateur) {
 
 	const char * motDePasse = utilisateur->mdp.c_str();
 	string interQuery = strcat(dbtQuery, utilisateur->id.c_str());
-	const char* intermedQuery;
+	const char* intermedQuery = nullptr;
 	if (connexion) {
 		string query = debutQuery + utilisateur->id + "\"";
 		const char* q = query.c_str();
@@ -139,7 +139,7 @@ bool recupRole(user *utilisateur) {
 
 	const char * motDePasse = utilisateur->mdp.c_str();
 	string interQuery = strcat(dbtQuery, utilisateur->id.c_str());
-	const char* intermedQuery;
+	const char* intermedQuery = nullptr;
 	if (connexion) {
 		string query = debutQuery + utilisateur->id + "\"";
 		const char* q = query.c_str();
@@ -163,7 +163,7 @@ bool recupRole(user *utilisateur) {
 }
 MYSQL_ROW  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
 {
-	MYSQL_ROW row;
+	MYSQL_ROW row = nullptr;
 	MYSQL_RES *res;
 
 
@@ -252,7 +252,7 @@ bool addDBRandomUser(unsigned int nb) {
 
 	if (conn) {
 		puts("Successful connection to database!");
-		for (int i = 0; i++; i < nb) {
+		for (unsigned int i = 0; i < nb; i++) {
 			string nom = gename(3, 8);
 			string rue = gename(2, 5);
 			size_t nb_ouvrage = 0;//(rand() % (10 - 0) + 1) + 0;
@@ -269,7 +269,7 @@ bool addDBRandomUser(unsigned int nb) {
 				res = mysql_store_result(conn);
 				while (row = mysql_fetch_row(res))
 				{
-					printf("ID: %s -|- NOM : %s -|- PRENOM : %s -|- @MAIL : %s -|- ROLE : %s -|- LIMITE DE NOMBRE D'OUVRAGES : %s -|- ADRESSE : %s -|- SCORE : %s |-+ ADDED\n", row[0], row[1], row[2], row[3], row[5], row[6], row[7]);
+					printf("ID: %s -|- NOM : %s -|- PRENOM : %s -|- @MAIL : %s -|- ROLE : %s -|- LIMITE DE NOMBRE D'OUVRAGES : %s -|- ADRESSE : %s -|- SCORE : %s |-+ ADDED\n", row[0], row[1], row[2], row[3], row[5], row[6], row[7], row[8]);
 				}
 				retour = 0;
 			}
@@ -332,8 +332,8 @@ void searchSaintheque() {
 		case 0:
 			notok = false;
 			break;
-		default: cout << "/!\ Erreur de choix : non reconnu /!\\" << endl;
-			break;
+		default:
+			cout << "/!\ Erreur de choix : non reconnu /!\\" << endl;
 		}
 		table[0].nom = "TITRE";
 		table[0].numColone = 1;
