@@ -380,7 +380,7 @@ void action(user *utilisateur) {
 	case 3: 
 		break;
 	case 4: if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
+		seeTheLoans();
 	}
 		break;
 	case 5: if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
@@ -491,6 +491,22 @@ void importFile() {
 	}
 }
 
+void seeTheLoans() {
+	string debutQuery = "SELECT ouvrage.titre, ouvrage.resume, genre.intitule FROM ouvrage INNER JOIN genre INNER JOIN adherents INNER JOIN emprunts WHERE adherents.mail = '";
+	string nomAdherent;
+	cout << "De quel adherent voulez vous voir les emprunts ?" << endl;
+	cin >> nomAdherent;
+	string finQuery = "AND adherents.id_adherents = emprunts.id_adherent AND emprunts.id_ouvrage = ouvrage.id_ouvrage AND ouvrage.id_genre = genre.id_genre;";
+	string intermedQuery = debutQuery + nomAdherent + finQuery;
+	colonne table[3];
+	table[0].nom = "TITRE";
+	table[0].numColone = 1;
+	table[1].nom = "DESCRIPTION";
+	table[1].numColone = 2;
+	table[2].nom = "GENRE";
+	table[2].numColone = 3;
+	mysqlQuery(intermedQuery.c_str(), table, 3);
+}
 
 
 bool estVide(list l) {

@@ -31,6 +31,7 @@ void customQuery();
 void executeOrder66(user*);
 void importFile();
 void seeTheLoans();
+void empruntOuvrage();
 
 void searchSaintheque();
 bool addDBRandomUser(unsigned int nb);
