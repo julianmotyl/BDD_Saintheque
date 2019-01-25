@@ -29,6 +29,8 @@ void mysqlQuery(const char *, colonne[], int);
 bool recupRole(user*);
 void customQuery();
 void executeOrder66(user*);
+void importFile();
+void seeTheLoans();
 
 
 

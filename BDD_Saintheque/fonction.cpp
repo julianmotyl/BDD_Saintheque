@@ -78,7 +78,7 @@ user* identification() {
 bool connexionMySQL() {
 
 	connexion = mysql_init(0);
-	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
+	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "saintheque", 3306, NULL, 0);
 	if (connexion){
 		cout << "La connexion a fonctionné !" << endl;
 		return true;
@@ -208,13 +208,14 @@ void action(user *utilisateur) {
 	cout << " (2) Emprunter un ouvrage" << endl;
 	cout << " (3) Retourner un ouvrage " << endl;
 	if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-		cout << " (4) Ajouter les ouvrages depuis un fichier externe" << endl;
-		cout << " (5) Afficher les ouvrages empruntees par un adherent" << endl;
+		cout << " (4) Afficher les ouvrages empruntees par un adherent" << endl;
+		cout << " (5) Ajouter les ouvrages depuis un fichier externe" << endl;
 	}
 	if (utilisateur->role == "Admin_Saintheque") {
 		cout << " (10) Faire des requêtes SQL " << endl;
 		cout << " (66) Executer un adhérant " << endl;
 	}
+	//cout << "(99) Quitter" << endl;
 	cin >> choix;
 	switch (choix)
 	{
@@ -229,7 +230,7 @@ void action(user *utilisateur) {
 	}
 		break;
 	case 5: if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
+		importFile();
 	}
 		break;
 
@@ -241,8 +242,13 @@ void action(user *utilisateur) {
 		executeOrder66(utilisateur);
 	}
 		break;
+	case 99:
+		break;
 	default: cout << "Erreur de choix non reconnu" << endl;
 		break;
+	}
+	if (choix != 99) {
+		action(utilisateur);
 	}
 }
 
@@ -258,12 +264,18 @@ void customQuery() {
 
 	//On met le jeu de résultat dans le pointeur result
 	result = mysql_use_result(connexion);
-	//Tant qu'il y a encore un résultat ...
-	//while ((row = mysql_fetch_row(result)))
-	{
-		printf("Resultat %ld\n", i);
-		i++;
+	if (result) {
+		while ((row = mysql_fetch_row(result)))
+		{
+			printf("Resultat %ld\n", i);
+			i++;
+		}
 	}
+	else {
+		cout << "La requete a echoue : " << mysql_error(connexion) << endl;
+	}
+	//Tant qu'il y a encore un résultat ...
+
 	//Libération du jeu de résultat
 	mysql_free_result(result);
 }
@@ -280,7 +292,7 @@ void executeOrder66(user * utilisateur) {
 	cin >> id;
 	const char * identifiant = id.c_str();
 	if (connexion) {
-		string query = debutQuery + utilisateur->id + "\"";
+		string query = debutQuery + id + "\"";
 		const char* q = query.c_str();
 		qstate = mysql_query(connexion, q);
 		if (!qstate)
@@ -297,7 +309,33 @@ void executeOrder66(user * utilisateur) {
 	}
 }
 
-
+void importFile() {
+	string debutQuery = "load data local infile '";
+	string nomFichier;
+	cout << "Quel est le nom du fichier (incluez bien l'extenssion)";
+	cin >> nomFichier;
+	string milieuQuery = "' into table ouvrages fields terminated by '";
+	string separateurDeChamps;
+	cout << "Quel est le séparateur de champ ?";
+	cin >> separateurDeChamps;
+	string finQuery = "lines terminated by '\n' (id_ouvrage, titre, id_genre, id_auteur, date_parution, duree, id_type_media, resume)";
+	if (connexion) {
+		string query = debutQuery + nomFichier + milieuQuery + separateurDeChamps + finQuery;
+		const char* q = query.c_str();
+		qstate = mysql_query(connexion, q);
+		if (!qstate)
+		{
+			cout << "Le fichier à bien été importe" << endl;
+		}
+		else
+		{
+			cout << "La requete a echoue : " << mysql_error(connexion) << endl;
+		}
+	}
+	else {
+		finish_with_error(connexion);
+	}
+}
 
 
 
