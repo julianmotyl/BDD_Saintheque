@@ -28,7 +28,9 @@ void finish_with_error(MYSQL*);
 MYSQL_ROW mysqlQuery(const char *, colonne[], int);
 bool recupRole(user*);
 void customQuery();
-void executeOrder66();
+void executeOrder66(user*);
+void importFile();
+void seeTheLoans();
 
 void searchSaintheque();
 bool addDBRandomUser(unsigned int nb);

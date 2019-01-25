@@ -53,7 +53,7 @@ user* identification() {
 		cout << endl << "<...> Connexion a l'interface de l'utilisateur '" << logid << "' <...>" << endl;
 		condition = connexionMySQL();
 		if (!condition) {
-			cout << "Echec de connexion à la base de données, souhaitez vous réessayer ? (o/n)" << endl;
+			cout << "Echec de connexion ï¿½ la base de donnï¿½es, souhaitez vous rï¿½essayer ? (o/n)" << endl;
 			string retry;
 			cin >> retry;
 				if (retry == "o") {
@@ -78,13 +78,13 @@ user* identification() {
 bool connexionMySQL() {
 
 	connexion = mysql_init(0);
-	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
+	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "saintheque", 3306, NULL, 0);
 	if (connexion){
-		cout << "La connexion a fonctionné !" << endl;
+		cout << "La connexion a fonctionnï¿½ !" << endl;
 		return true;
 	}
 	else {
-		cout << "La connexion n'a pas fonctionné !" << endl;
+		cout << "La connexion n'a pas fonctionnï¿½ !" << endl;
 		return false;
 	}
 }
@@ -115,6 +115,13 @@ bool verifUtilisateur(user *utilisateur) {
 				return recupRole(utilisateur);
 			} 
 		}
+		else
+		{
+			cout << "La requete a echoue : " << mysql_error(connexion) << endl;
+		}
+	}
+	else {
+		finish_with_error(connexion);
 	}
 	return false;
 }
@@ -144,6 +151,13 @@ bool recupRole(user *utilisateur) {
 			utilisateur->role = row[0];
 			return true;
 		}
+		else
+		{
+			cout << "La requete a echoue : " << mysql_error(connexion) << endl;
+		}
+	}
+	else {
+		finish_with_error(connexion);
 	}
 	return false;
 }
@@ -194,11 +208,11 @@ string gename(const unsigned int MIN, const unsigned int MAX) {
 	acceptes += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	/*std::*/string filename = "";
 	size_t taille = (rand() % (MAX - MIN) + 1) + MIN;
-	size_t pos = (rand() % (26 - 51) + 1) + 26;//j'ai 26 caractères majuscules dans acceptes
+	size_t pos = (rand() % (26 - 51) + 1) + 26;//j'ai 26 caractï¿½res majuscules dans acceptes
 	filename += acceptes[pos];
 	for (size_t i = 0; i < taille - 1; i++)
 	{
-		pos = rand() % 25;//j'ai 26 caractères minuscules dans acceptes
+		pos = rand() % 25;//j'ai 26 caractï¿½res minuscules dans acceptes
 		filename += acceptes[pos];
 	}
 	//char *cstr = new char[filename.length() + 1];
@@ -247,7 +261,7 @@ bool addDBRandomUser(unsigned int nb) {
 			size_t score = 100;//(rand() % (500 - 0) + 1) + 0;
 			string prenom = gename(3, 6);
 			const char * grouptab[3][2] = { {"admin_saintheque","admin"},{"bibliothecaire_saintheque","bibliothecaire"},{"client_saintheque","client"} };
-			string query = "INSERT INTO `saintheque`.`adherents` (`nom`, `prénom`, `mail`, `mdp`, `role`, `nbr_ouvrages_max`, `adresse`, `score`) VALUES('" + nom + "', '" + prenom + "', '" + minuscule(prenom) + "." + minuscule(nom) + "@mail.fr', '" + majuscule(nom).substr(0, 1) + majuscule(prenom).substr(0, 2) + majuscule(nom).substr(majuscule(nom).size() - 1, majuscule(nom).size()) + "', '" + grouptab[groupe][0] + "', '" + char(nb_ouvrage) + "', '" + char(num_rue) + " rue de " + rue + ", 42000 Saint-Etienne, France', '" + char(score) + "');";
+			string query = "INSERT INTO `saintheque`.`adherents` (`nom`, `prï¿½nom`, `mail`, `mdp`, `role`, `nbr_ouvrages_max`, `adresse`, `score`) VALUES('" + nom + "', '" + prenom + "', '" + minuscule(prenom) + "." + minuscule(nom) + "@mail.fr', '" + majuscule(nom).substr(0, 1) + majuscule(prenom).substr(0, 2) + majuscule(nom).substr(majuscule(nom).size() - 1, majuscule(nom).size()) + "', '" + grouptab[groupe][0] + "', '" + char(nb_ouvrage) + "', '" + char(num_rue) + " rue de " + rue + ", 42000 Saint-Etienne, France', '" + char(score) + "');";
 			const char* q = query.c_str();
 			qstate = mysql_query(conn, q);
 			if (!qstate)
@@ -289,7 +303,7 @@ void searchSaintheque() {
 		cout << "(3) ...par sa date de parution ? [dd/mm/yyyy]" << endl;
 		cout << "(0) QUITTER" << endl;
 		cin >> choix;
-		cout << "Veuillez rentrer le(s) mot(s) clé(s) pour la recherche ? " << endl << ": ";
+		cout << "Veuillez rentrer le(s) mot(s) clï¿½(s) pour la recherche ? " << endl << ": ";
 		getline(cin, search);
 		//afficher les mediatheques et nombre d'exemplaires
 		switch (choix)
@@ -342,85 +356,140 @@ void searchSaintheque() {
 }
 
 void action(user *utilisateur) {
-	char choix;
+	int choix;
 	cout << "Bonjour " << utilisateur->id << " que souhaitez vous faire ?" << endl;
-	cout << " (1) Faire une recherche par ouvrage ou par auteur " << endl;
+	cout << " (1) Rechercher un ouvrage par titre, par auteur ou par date" << endl;
+	cout << " (2) Emprunter un ouvrage" << endl;
+	cout << " (3) Retourner un ouvrage " << endl;
 	if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-		cout << " (2) Ajouter un emprunt" << endl;
-		cout << " (3) Retourner un emprunt " << endl;
-		cout << " (4) Ajouter un ouvrage " << endl;
-		cout << " (5) Modifier l'état d'un ouvrage" << endl;
-		cout << " (6) Modifier un utilisateur " << endl;
-
+		cout << " (4) Afficher les ouvrages empruntees par un adherent" << endl;
+		cout << " (5) Ajouter les ouvrages depuis un fichier externe" << endl;
 	}
-	else if (utilisateur->role == "Admin_Saintheque") {
-		cout << " (10) Faire des requêtes SQL " << endl;
-		cout << " (66) Executer un adhérant " << endl;
+	if (utilisateur->role == "Admin_Saintheque") {
+		cout << " (10) Faire des requï¿½tes SQL " << endl;
+		cout << " (66) Executer un adhï¿½rant " << endl;
 	}
+	//cout << "(99) Quitter" << endl;
 	cin >> choix;
 	switch (choix)
 	{
-	case '1': 
+	case 1: 
 		break;
-	case '2': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
+	case 2: 
+		break;
+	case 3: 
+		break;
+	case 4: if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
 
 	}
 		break;
-	case '3': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
+	case 5: if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
+		importFile();
 	}
 		break;
-	case '4': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
 
-	}
-		break;
-	case '5': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
-	}
-		break;
-	case '6': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
-	}
-		break;
-	case '10': if (utilisateur->role == "Admin_Saintheque") {
+	case 10: if (utilisateur->role == "Admin_Saintheque") {
 		customQuery();
 	}
 		break; 
-	case '66': if (utilisateur->role == "Admin_Saintheque") {
-		executeOrder66();
+	case 66: if (utilisateur->role == "Admin_Saintheque") {
+		executeOrder66(utilisateur);
 	}
 		break;
-	default: cout << "Erreur de choix : non reconnu" << endl;
+	case 99:
 		break;
+	default: cout << "Erreur de choix non reconnu" << endl;
+		break;
+	}
+	if (choix != 99) {
+		action(utilisateur);
 	}
 }
 
-void customQuery() {/*
+void customQuery() {
 	string query;
 	cout << "Quel est votre requete ?" << endl;
 	cin >> query;
 	mysql_query(connexion, query.c_str());
-	//Déclaration des objets
+	//Dï¿½claration des objets
 	MYSQL_RES *result = NULL;
 	MYSQL_ROW row;
 	int i = 1;
 
-	//On met le jeu de résultat dans le pointeur result
+	//On met le jeu de rï¿½sultat dans le pointeur result
 	result = mysql_use_result(connexion);
-	//Tant qu'il y a encore un résultat ...
-	//while ((row = mysql_fetch_row(result)))
-	{
-		printf("Resultat %ld\n", i);
-		i++;
+	if (result) {
+		while ((row = mysql_fetch_row(result)))
+		{
+			printf("Resultat %ld\n", i);
+			i++;
+		}
 	}
-	//Libération du jeu de résultat
-	mysql_free_result(result);*/
+	else {
+		cout << "La requete a echoue : " << mysql_error(connexion) << endl;
+	}
+	//Tant qu'il y a encore un rï¿½sultat ...
+
+	//Libï¿½ration du jeu de rï¿½sultat
+	mysql_free_result(result);
 }
-void executeOrder66() {
 
+void executeOrder66(user * utilisateur) {
+	MYSQL_ROW row;
+	MYSQL_RES *res;
+
+	string debutQuery = "DELETE FROM adherents where mail = \"";
+	char * dbtQuery = new char[debutQuery.length() + 1];
+	strcpy(dbtQuery, debutQuery.c_str());
+
+	std::string id;
+	cin >> id;
+	const char * identifiant = id.c_str();
+	if (connexion) {
+		string query = debutQuery + id + "\"";
+		const char* q = query.c_str();
+		qstate = mysql_query(connexion, q);
+		if (!qstate)
+		{
+			cout << "Ce sera fait mon Seigneur !" << endl;
+		}
+		else
+		{
+			cout << "La requete a echoue : " << mysql_error(connexion) << endl;
+		}
+	}
+	else {
+		finish_with_error(connexion);
+	}
 }
 
-
+void importFile() {
+	string debutQuery = "load data local infile '";
+	string nomFichier;
+	cout << "Quel est le nom du fichier (incluez bien l'extenssion)";
+	cin >> nomFichier;
+	string milieuQuery = "' into table ouvrages fields terminated by '";
+	string separateurDeChamps;
+	cout << "Quel est le sï¿½parateur de champ ?";
+	cin >> separateurDeChamps;
+	string finQuery = "lines terminated by '\n' (id_ouvrage, titre, id_genre, id_auteur, date_parution, duree, id_type_media, resume)";
+	if (connexion) {
+		string query = debutQuery + nomFichier + milieuQuery + separateurDeChamps + finQuery;
+		const char* q = query.c_str();
+		qstate = mysql_query(connexion, q);
+		if (!qstate)
+		{
+			cout << "Le fichier ï¿½ bien ï¿½tï¿½ importe" << endl;
+		}
+		else
+		{
+			cout << "La requete a echoue : " << mysql_error(connexion) << endl;
+		}
+	}
+	else {
+		finish_with_error(connexion);
+	}
+}
 
 
 
