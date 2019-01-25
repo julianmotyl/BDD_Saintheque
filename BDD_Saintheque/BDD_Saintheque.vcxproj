@@ -127,6 +127,7 @@
   <ItemGroup>
     <ClCompile Include="fonction.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fonction.h" />

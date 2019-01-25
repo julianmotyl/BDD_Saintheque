@@ -1,3 +1,4 @@
+/*
 #include <mysql.h>
 #include <iostream>
 #include <cstdlib>
@@ -34,3 +35,4 @@ int main() {
 	//customQuery();
 	return 0;
 }
+*/
