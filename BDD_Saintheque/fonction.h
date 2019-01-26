@@ -22,6 +22,7 @@ typedef struct colonne {
 static MYSQL* connexion; //On conserve la même connexion pendant toute la durée du programme
 //static user utilisateur; //On conserve aussi le mmême urilisateur
 
+std::string today();
 user* identification();
 bool connexionMySQL();
 bool verifUtilisateur(user* user);
