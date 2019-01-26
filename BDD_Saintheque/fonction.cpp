@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <mysql.h>
 #include <time.h>
 #include <math.h>
@@ -55,7 +55,7 @@ user* identification() {
 		cout << endl << "<...> Connexion a l'interface de l'utilisateur '" << logid << "' <...>" << endl;
 		condition = connexionMySQL();
 		if (!condition) {
-			cout << "Echec de connexion � la base de donn�es, souhaitez vous r�essayer ? (o/n)" << endl;
+			cout << "Echec de connexion à la base de données, souhaitez vous réessayer ? (o/n)" << endl;
 			string retry;
 			cin >> retry;
 				if (retry == "o") {
@@ -69,7 +69,7 @@ user* identification() {
 
 			}
 			else {
-				cout << "Identification echoue, mauvais couple mail / mot de passe" << endl;
+				cout << "/!\ L'identification a échoué, @mail ou mot de passe incorrect /!\\" << endl;
 				condition = false;
 			}
 		}
@@ -80,13 +80,14 @@ user* identification() {
 bool connexionMySQL() {
 
 	connexion = mysql_init(0);
-	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0);
+	//connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "saintheque", 3306, NULL, 0); // DB Julian
+	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
 	if (connexion){
-		cout << "La connexion a fonctionn� !" << endl;
+		cout << "La connexion a fonctionné !" << endl;
 		return true;
 	}
 	else {
-		cout << "La connexion n'a pas fonctionn� !" << endl;
+		cout << "La connexion n'a pas fonctionné !" << endl;
 		return false;
 	}
 }
@@ -199,7 +200,7 @@ string gename(const unsigned int MIN, const unsigned int MAX) {
 	bool alt = true;
 	/*std::*/string filename = "";
 	size_t taille = (rand() % (MAX - MIN) + 1) + MIN;
-	size_t pos = rand() % 26;//j'ai 26 caract�res majuscules dans acceptes
+	size_t pos = rand() % 26;//j'ai 26 caractères majuscules dans acceptes
 	filename += acceptes[pos];
 	for (size_t i = 0; i < taille - 1; i++)
 	{
@@ -260,9 +261,9 @@ bool addDBRandomUser(unsigned int nb) {
 			unsigned int score = 100;//(rand() % (500 - 0) + 1) + 0;
 			string prenom = gename(3, 6);
 			const char * grouptab[4][2] = { {"admin_saintheque","admin"},{"client_saintheque","client"},{"bibliothecaire_saintheque","bibliothecaire"},{"client_saintheque","client"} };
-			string query = "INSERT INTO `saintheque`.`adherents` (`nom`, `prenom`, `mail`, `mdp`, `role`, `nbr_ouvrages_max`, `adresse`, `score`) VALUES('" + nom + "', '" + prenom + "', '" + minuscule(prenom) + "." + minuscule(nom) + "@mail.fr', '" + majuscule(nom).substr(0, 1) + majuscule(prenom).substr(0, 2) + majuscule(nom).substr(majuscule(nom).size() - 1, majuscule(nom).size()) + "', '" + grouptab[groupe][0] + "', '" + to_string(nb_ouvrage) + "', '" + to_string(num_rue) + " rue de " + rue + ", 42000 Saint-Etienne, France', '" + to_string(score) + "');";
+			string query = "INSERT INTO `saintheque`.`adherents` (`nom`, `prenom`, `mail`, `mdp`, `role`, `nbr_ouvrages_max`, `adresse`, `score`) VALUES('" + nom + "', '" + prenom + "', '" + minuscule(prenom) + "." + minuscule(nom) + "@mail.fr', '" + majuscule(nom).substr(0, 1) + majuscule(prenom).substr(0, 2) + majuscule(nom).substr(majuscule(nom).size() - 1, majuscule(nom).size()) + "', '" + grouptab[groupe][0] + "', '" + to_string(nb_ouvrage) + "', '" + to_string(num_rue) + " rue de " + rue + ", 42000 saint-Etienne, France', '" + to_string(score) + "');";
 			cout << query <<endl;
-			//INSERT INTO `saintheque`.`adherents` (`nom`, `prenom`, `mail`, `mdp`, `adresse`, `score`) VALUES('Gonga', 'J�r�me', 'jerome.gonga@mail.fr', 'GJEA', '2 avenue Duroy, 42000 Saint-Etienne, France', '200');
+			//INSERT INTO `saintheque`.`adherents` (`nom`, `prenom`, `mail`, `mdp`, `adresse`, `score`) VALUES('Gonga', 'Jérôme', 'jerome.gonga@mail.fr', 'GJEA', '2 avenue Duroy, 42000 saint-Etienne, France', '200');
 
 			const char* q = query.c_str();
 			qstate = mysql_query(conn, q);
@@ -311,14 +312,14 @@ vector<string> split(const string &str, const string &separator)
 }
 
 bool insertFile(string file, string table) {
-	//le fichier doit comprendre le m�me nombre de colonne que la table de la base de donn�es (s�par�es par des tabulations)
+	//le fichier doit comprendre le même nombre de colonne que la table de la base de données (séparées par des tabulations)
 	bool retour = 0;
 	MYSQL* conn;
 	MYSQL_ROW row = nullptr;
 	MYSQL_RES *res;
 	conn = mysql_init(0);
 
-	//Choisir sa base de donn�es !!
+	//Choisir sa base de données !!
 	//conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
 	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
 
@@ -381,7 +382,7 @@ void searchSaintheque() {
 		cout << "(3) ...par sa date de parution ? [yyyy-mm-dd]" << endl;
 		cout << "(0) QUITTER" << endl;
 		cin >> choix;
-		cout << "Veuillez rentrer le(s) mot(s) cl�(s) pour la recherche ? " << endl << ": ";
+		cout << "Veuillez rentrer le(s) mot(s) clé(s) pour la recherche ? " << endl << ": ";
 		getline(cin, search);
 		//afficher les mediatheques et nombre d'exemplaires
 		switch (choix)
@@ -438,53 +439,52 @@ void searchSaintheque() {
 void action(user *utilisateur) {
 	char choix;
 	cout << "Bonjour " << utilisateur->id << " que souhaitez vous faire ?" << endl;
-	cout << " (1) Faire une recherche par ouvrage ou par auteur " << endl;
-	if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-		cout << " (2) Ajouter un emprunt" << endl;
-		cout << " (3) Retourner un emprunt " << endl;
-		cout << " (4) Ajouter un ouvrage " << endl;
-		cout << " (5) Modifier l'�tat d'un ouvrage" << endl;
-		cout << " (6) Modifier un utilisateur " << endl;
-
+	cout << " (1) Rechercher un ouvrage par titre, par auteur ou par date" << endl;
+	cout << " (2) Emprunter un ouvrage" << endl;
+	cout << " (3) Retourner un ouvrage " << endl;
+	if (utilisateur->role == "bibliotecaire_saintheque" || utilisateur->role == "admin_saintheque") {
+		cout << " (4) Afficher les ouvrages empruntés par un adhérent" << endl;
+		cout << " (5) Ajouter du contenu dans une table de la base de données à partir d'un fichier externe" << endl;
 	}
-	else if (utilisateur->role == "Admin_Saintheque") {
-		cout << " (10) Faire des requ�tes SQL " << endl;
-		cout << " (66) Executer un adh�rant " << endl;
+	else if (utilisateur->role == "admin_saintheque") {
+		cout << " (10) Faire des requêtes SQL " << endl;
+		cout << " (66) Executer un adhérent " << endl;
 	}
 	cin >> choix;
 	switch (choix)
 	{
 	case '1': 
+		searchSaintheque();
 		break;
-	case '2': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
+	case '2': 
+		empruntOuvrage(utilisateur);
+		break;
+	case '3': 
+		cout << endl << rendOuvrage(utilisateur) << endl;
+		break;
+	case '4': if (utilisateur->role == "bibliotecaire_saintheque" || utilisateur->role == "admin_saintheque") {
+		seeTheLoans();
 	}
 		break;
-	case '3': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
+	case '5': if (utilisateur->role == "bibliotecaire_saintheque" || utilisateur->role == "admin_saintheque") {
+		string file;
+		string table;
+		cout << "Rentrer le nom du fichier dont vous souhaitez importer les données : ";
+		getline(cin, file);
+		cout << "Rentrer le nom de la table dans laquelle vous souhaitez importer les données : ";
+		getline(cin, table);
+		cout << endl << insertFile(file, table) << endl;
 	}
 		break;
-	case '4': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
-	}
-		break;
-	case '5': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
-	}
-		break;
-	case '6': if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-
-	}
-		break;
-	case '10': if (utilisateur->role == "Admin_Saintheque") {
+	case '10': if (utilisateur->role == "admin_saintheque") {
 		customQuery();
 	}
 		break; 
-	case '66': if (utilisateur->role == "Admin_Saintheque") {
-		executeOrder66();
+	case '66': if (utilisateur->role == "admin_saintheque") {
+		executeOrder66(utilisateur);
 	}
 		break;
-	default: cout << "Erreur de choix : non reconnu" << endl;
+	default: cout << "/!\ Erreur de choix : non reconnu /!\\" << endl;
 		break;
 	}
 }
@@ -509,189 +509,128 @@ vector <string> lectureFile(string name) {
 	return monTableau;
 }
 
-void customQuery() {/*
+void customQuery() {
 	string query;
-	cout << "Quel est votre requete ?" << endl;
+	cout << "Quelle est votre requête ?" << endl;
 	cin >> query;
 	mysql_query(connexion, query.c_str());
-	//D�claration des objets
+	//Déclaration des objets
 	MYSQL_RES *result = NULL;
 	MYSQL_ROW row;
 	int i = 1;
 
-	//On met le jeu de r�sultat dans le pointeur result
+	//On met le jeu de résultat dans le pointeur result
 	result = mysql_use_result(connexion);
-	//Tant qu'il y a encore un r�sultat ...
-	//while ((row = mysql_fetch_row(result)))
-	{
-		printf("Resultat %ld\n", i);
-		i++;
-	}
-	//Lib�ration du jeu de r�sultat
-	mysql_free_result(result);*/
-}
-void executeOrder66() {
-
-}
-
-
-
-
-
-bool estVide(list l) {
-	return l == NULL;
-}
-
-void afficher(list l) {
-	while (!estVide(l)) {
-		cout << l->valeur << ",";
-		l = l->suivant;
-	}
-}
-
-int count = 0;
-list supprime_pos_rec(list l, int pos) {
-	if (estVide(l)) {
-		return l;
-	}
-	if (::count == pos) {
-		maillon *m = l->suivant;
-		free(l);
-		return m;
+	if (result) {
+		while ((row = mysql_fetch_row(result)))
+		{
+			printf("Résultat %ld\n", i);
+			i++;
+		}
 	}
 	else {
-		::count++;
-		l->suivant = supprime_pos_rec(l->suivant, pos);
-		return l;
+		cout << "La requête a échoué : " << mysql_error(connexion) << endl;
 	}
+	//Tant qu'il y a encore un résultat ...
+
+	//Libération du jeu de résultat
+	mysql_free_result(result);
 }
 
-list initList() {
-	return NULL;
-}
+void executeOrder66(user * utilisateur) {
+	MYSQL_ROW row;
+	MYSQL_RES *res;
 
-list insert(list l, int val) {
+	string debutQuery = "DELETE FROM adherents where mail = \"";
+	char * dbtQuery = new char[debutQuery.length() + 1];
+	strcpy(dbtQuery, debutQuery.c_str());
 
-	if (estVide(l)) {
-		maillon*m = new maillon;
-		m->valeur = val;
-		m->suivant = NULL;
-		return m;
-	}
-	if (l->suivant->valeur >= val) {
-		maillon*m = new maillon;
-		m->valeur = val;
-		m->suivant = l->suivant;
-		l->suivant = m;
-		return l;
-	}
-	if (l->valeur >= val) {
-		maillon*m = new maillon;
-		m->valeur = val;
-		m->suivant = l;
-		return m;
+	std::string id;
+	cin >> id;
+	const char * identifiant = id.c_str();
+	if (connexion) {
+		string query = debutQuery + id + "\"";
+		const char* q = query.c_str();
+		qstate = mysql_query(connexion, q);
+		if (!qstate)
+		{
+			cout << "Ce sera fait mon Seigneur !" << endl;
+		}
+		else
+		{
+			cout << "La requête a échoué : " << mysql_error(connexion) << endl;
+		}
 	}
 	else {
-		l->suivant = insert(l->suivant, val);
-		return l;
+		finish_with_error(connexion);
 	}
 }
 
-list supprime(int val, list l) {
-	list result = l;
-	bool supprime = false;
-	if (l->valeur == val) {
-		result = l->suivant;
-		free(l);
-		supprime = true;
+/*
+void importFile() {
+	string debutQuery = "load data local infile '";
+	string nomFichier;
+	cout << "Quel est le nom du fichier (incluez bien l'extension)";
+	cin >> nomFichier;
+	string milieuQuery = "' into table ouvrages fields terminated by '";
+	string separateurDeChamps;
+	cout << "Quel est le séparateur de champ ?";
+	cin >> separateurDeChamps;
+	string finQuery = "lines terminated by '\n' (id_ouvrage, titre, id_genre, id_auteur, date_parution, duree, id_type_media, resume)";
+	if (connexion) {
+		string query = debutQuery + nomFichier + milieuQuery + separateurDeChamps + finQuery;
+		const char* q = query.c_str();
+		qstate = mysql_query(connexion, q);
+		if (!qstate)
+		{
+			cout << "Le fichier a bien été importé" << endl;
+		}
+		else
+		{
+			cout << "La requête a échoué : " << mysql_error(connexion) << endl;
+		}
 	}
-	while (!estVide(l->suivant) && !supprime) {
+	else {
+		finish_with_error(connexion);
+	}
+}
+*/
 
-		if (l->suivant->valeur == val) {
-			maillon * m = l->suivant->suivant;
-			free(l->suivant);
-			l->suivant = m;
-			supprime = true;
+void seeTheLoans() {
+	string debutQuery = "SELECT ouvrage.titre, ouvrage.resume, genre.intitule FROM ouvrage INNER JOIN genre INNER JOIN adherents INNER JOIN emprunts WHERE adherents.mail = '";
+	string nomAdherent;
+	cout << "De quel adhérent voulez vous voir les emprunts ?" << endl;
+	cin >> nomAdherent;
+	string finQuery = "' AND adherents.id_adherents = emprunts.id_adherent AND emprunts.id_ouvrage = ouvrage.id_ouvrage AND ouvrage.id_genre = genre.id_genre;";
+	string intermedQuery = debutQuery + nomAdherent + finQuery;
+	colonne table[3];
+	table[0].nom = "TITRE";
+	table[0].numColone = 1;
+	table[1].nom = "DESCRIPTION";
+	table[1].numColone = 2;
+	table[2].nom = "GENRE";
+	table[2].numColone = 3;
+	mysqlQuery(intermedQuery.c_str(), table, 3);
+}
+
+void empruntOuvrage(user * utilisateur) {
+	string query = "SELECT score FROM adherents WHERE mail ='" + utilisateur->id + "';";
+	const char * q = query.c_str();
+	MYSQL_ROW row = mysqlQuery(q, NULL, 0);
+	int userScore = (int)row[0];
+	if (userScore != 0) {
+		string query2 = "SELECT nbr_ouvrages_max FROM adherents WHERE mail ='" + utilisateur->id + "';";
+		const char * q2 = query.c_str();
+		MYSQL_ROW row = mysqlQuery(q2, NULL, 0);
+		int userMaxOuvrage = (int)row[0];
+		if (userMaxOuvrage != 0) {
+
 		}
 		else {
-			l = l->suivant;
+			cout << "Vous avez déjà trop d'emprunts en cours" << endl;
 		}
-	}
-	return result;
-}
-
-list supprime_rec(int val, list l) {
-
-	if (!estVide(l)) {
-		return l;
-	}
-	if (l->valeur == val) {
-		maillon *m = l->suivant;
-		free(l);
-		return m;
 	}
 	else {
-		l->suivant = supprime_rec(val, l->suivant);
-		return l;
-	}
-}
-
-int factorielle(int n) {
-
-	if (n <= 1) {
-		return 1;
-	}
-	else {
-		return n * factorielle(n - 1);
-	}
-
-}
-
-int ** matrixInt(const int ROW = 5, const int COL = 5, const int MIN = 0, const int MAX = 100)
-{
-	int **pt = new int *[ROW];
-	for (int u = 0; u < ROW; u++)
-		*(pt + u) = new int[COL];
-	cout << sizeof(pt) << endl;
-	cout << sizeof(pt[0]) << endl;
-	cout << sizeof(int) << endl;
-	cout << ROW << endl;
-	cout << COL << endl;
-	srand(time(NULL));
-
-
-	for (int i = 0; i < ROW; i++)
-	{
-		for (int j = 0; j < COL; j++)
-		{
-			int ran = rand() % (MAX - MIN + 1) + MIN;
-			cout << "l" << i + 1 << "/" << ROW << " ; c" << j + 1 << "/" << COL << endl;
-			cout << "r" << i << ", c" << j << endl;
-			pt[i][j] = ran;
-			cout << pt[i][j] << endl;
-			cout << &pt[i][j] << endl;
-		}
-
-	}
-	return pt;
-
-}
-
-void disMatrixInt(int ** pt)
-{
-	//const int ROW = sizeof(pt)/sizeof(int); NOT WORKING
-	//const int COL = sizeof(*pt)/sizeof(int);
-	const int ROW = 6;
-	const int COL = 5;
-
-	cout << endl;
-	for (int i = 0; i < ROW; i++)
-	{
-		for (int j = 0; j < COL; j++)
-		{
-			cout << pt[i][j] << " ; ";
-		}
-		cout << endl;
-
+		cout << "Votre score est trop mauvais, vous en respectez pas la ligne du parti" << endl;
 	}
 }

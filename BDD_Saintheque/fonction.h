@@ -24,14 +24,17 @@ static MYSQL* connexion; //On conserve la même connexion pendant toute la durée 
 
 user* identification();
 bool connexionMySQL();
-bool verifUtilisateur(user*);
-void action(user*);
-void finish_with_error(MYSQL*);
+bool verifUtilisateur(user* user);
+void action(user* user);
+void finish_with_error(MYSQL* mysql);
 MYSQL_ROW mysqlQuery(const char *, colonne[], int);
-bool recupRole(user*);
+bool recupRole(user* user);
 void customQuery();
-void executeOrder66();
-
+void executeOrder66(user * user);
+//void importFile();
+void seeTheLoans();
+void empruntOuvrage(user* user);
+bool rendOuvrage(user * user);
 void searchSaintheque();
 bool addDBRandomUser(unsigned int nb);
 std::string majuscule(std::string chaine);
@@ -40,24 +43,3 @@ std::string gename(const unsigned int MIN, const unsigned int MAX);
 std::vector <std::string> lectureFile(std::string name);
 std::vector<std::string> split(const std::string &str, const std::string &separator);
 bool insertFile(std::string file, std::string table);
-
-//TD des Listes
-
-typedef struct maillon {
-
-	char  valeur;
-	maillon * suivant;
-
-} maillon;
-
-typedef maillon *list;
-
-
-int factorielle(int n);
-int ** matrixInt(const int ROW, const int COL, const int MIN, const int MAX);
-void disMatrixInt(int ** pt);
-list initList();
-bool estVide(list l);
-void afficher(list l);
-list insert(list l, int val);
-list supprime_rec(int val, list l);
