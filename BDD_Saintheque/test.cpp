@@ -49,6 +49,7 @@ int wmain(){
 	/*for(unsigned int i = 0;i< lectureFile("test").size();i++)
 		cout << lectureFile("test")[i]<<endl;*/
 	//searchSaintheque();
+	cout << endl << insertFile("test", "ouvrage")<<endl;
 	system("PAUSE");
 	//cout<<"add_err : "<<addDBRandomUser(5) << endl;
 	//system("PAUSE");

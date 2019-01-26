@@ -332,9 +332,15 @@ bool insertFile(string file, string table) {
 			vector <string> tempRow = split(monTableau[i], "\t");
 			string query = "INSERT INTO `saintheque`.`" + table + "` VALUES(";
 			for (unsigned int j = 0; j < tempRow.size()-1; j++) {
-				query += "'" + tempRow[j] + "',";
+				if (tempRow[j].empty() or tempRow[j] == "NULL" or tempRow[j] == "null")
+					query += "NULL,";
+				else
+					query += "'" + tempRow[j] + "',";
 			}
-			query += "'" + tempRow[tempRow.size() - 1] + "');";
+			if (tempRow[tempRow.size() - 1].empty() or tempRow[tempRow.size() - 1] == "NULL" or tempRow[tempRow.size() - 1] == "null")
+				query += "NULL);";
+			else
+				query += "'" + tempRow[tempRow.size() - 1] + "');";
 			cout << query << endl;
 			const char* q = query.c_str();
 			qstate = mysql_query(conn, q);
@@ -346,7 +352,7 @@ bool insertFile(string file, string table) {
 			}
 			else
 			{
-				cout << "Query failed: " << mysql_error(conn) << endl;
+				cout << "Query failed: " << mysql_error(conn) << endl << endl;
 				retour = 1;
 			}
 		}
@@ -381,10 +387,12 @@ void searchSaintheque() {
 		switch (choix)
 		{
 		case 1:
-			query = "SELECT ouvrage.*,COUNT(exemplaires.id_ouvrage),COUNT(mediatheques.id_mediatheque) FROM ouvrage INNER JOIN exemplaires ON ouvrage.id_ouvrage = exemplaires.id_ouvrage INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheque WHERE ouvrage.titre SOUNDS LIKE '" + search +"';";
+			query = "SELECT ouvrage.titre,auteur.prenom,auteur.nom,ouvrage.date_parution,ouvrage.resume,genre.intitule,type_media.intitule,ouvrage.duree,COUNT(exemplaires.id_ouvrage), COUNT(DISTINCT mediatheques.id_mediatheques) FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur INNER JOIN type_media ON ouvrage.id_type_media = type_media.id_type_media INNER JOIN genre ON ouvrage.id_genre = genre.id_genre INNER JOIN exemplaires ON ouvrage.id_ouvrage = exemplaires.id_ouvrage INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheques WHERE ouvrage.titre SOUNDS LIKE '" + search +"';";
+			//SELECT ouvrage.*,auteur.prenom,auteur.nom,ouvrage.date_parution,ouvrage.resume,genre.intitule,type_media.intitule,ouvrage.duree,COUNT(exemplaires.id_ouvrage), COUNT(DISTINCT mediatheques.id_mediatheques) FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur INNER JOIN type_media ON ouvrage.id_type_media = type_media.id_type_media INNER JOIN genre ON ouvrage.id_genre = genre.id_genre INNER JOIN exemplaires ON ouvrage.id_ouvrage = exemplaires.id_ouvrage INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheques WHERE ouvrage.titre SOUNDS LIKE 'les justes';
+			//SELECT COUNT(exemplaires.id_exemplaire) FROM exemplaires INNER JOIN emprunts ON emprunts.id_exemplaire = exemplaires.id_exemplaire WHERE rendu = 1 OR exemplaires.id_exemplaire != emprunts.id_exemplaire;			
 			break;
 		case 2:
-			query = "SELECT * FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur WHERE auteur.nom SOUNDS LIKE '" + search.substr(search.find(' ') + 1, 999999) + "' AND WHERE auteur.prenom SOUNDS LIKE '" + search.substr(1, search.find(' ') - 1) + "';";
+			query = "SELECT * FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur WHERE auteur.nom SOUNDS LIKE '" + search.substr(search.find(' ') + 1, 999999) + "' AND auteur.prenom SOUNDS LIKE '" + search.substr(1, search.find(' ') - 1) + "';";
 			/*table[0].nom = "NOM";
 			table[0].numColone = 1;
 			table[1].nom = "PRENOM";
