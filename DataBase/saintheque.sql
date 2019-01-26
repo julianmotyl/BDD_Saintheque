@@ -36,7 +36,7 @@ CREATE TABLE `adherents` (
   `score` int(10) unsigned NOT NULL DEFAULT '100',
   PRIMARY KEY (`id_adherents`),
   UNIQUE KEY `idadhérents_UNIQUE` (`id_adherents`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +45,7 @@ CREATE TABLE `adherents` (
 
 LOCK TABLES `adherents` WRITE;
 /*!40000 ALTER TABLE `adherents` DISABLE KEYS */;
-INSERT INTO `adherents` VALUES (1,'Philippe','Edouard','edouard.philippe@mail.fr','PEDD','client_saintheque',0,'5 rue du Nord, 42000 Saint-Etienne, France',100),(2,'Gonga','Jérôme','jerome.gonga@mail.fr','GJEA','client_saintheque',5,'2 avenue Duroy, 42000 Saint-Etienne, France',200),(3,'Davirdcwuk','Puim','puim.davirdcwuk@mail.fr','DPUK','client_saintheque',0,'86 rue de Meil, 42000 Saint-Etienne, France',100),(4,'Euuaaeoi','Xoiaua','xoiaua.euuaaeoi@mail.fr','EXOI','bibliothecaire_saintheque',5,'35 rue de Mieuo, 42000 Saint-Etienne, France',100),(5,'Padeq','Qefif','qefif.padeq@mail.fr','PQEQ','bibliothecaire_saintheque',5,'70 rue de Eerar, 42000 Saint-Etienne, France',100),(6,'Kehi','Dahof','dahof.kehi@mail.fr','KDAI','bibliothecaire_saintheque',0,'72 rue de Tobo, 42000 Saint-Etienne, France',100),(7,'Iiloje','Demi','demi.iiloje@mail.fr','IDEE','bibliothecaire_saintheque',0,'81 rue de Dote, 42000 Saint-Etienne, France',100),(8,'Uiwamal','Vicec','vicec.uiwamal@mail.fr','UVIL','client_saintheque',0,'62 rue de Voro, 42000 Saint-Etienne, France',100),(9,'Yivizad','Joruj','joruj.yivizad@mail.fr','YJOD','bibliothecaire_saintheque',0,'95 rue de Hira, 42000 Saint-Etienne, France',100),(10,'Niqiwis','Gihece','gihece.niqiwis@mail.fr','NGIS','bibliothecaire_saintheque',0,'45 rue de Zefok, 42000 Saint-Etienne, France',100),(11,'Cuviseri','Xutodi','xutodi.cuviseri@mail.fr','CXUI','bibliothecaire_saintheque',0,'27 rue de Xuw, 42000 Saint-Etienne, France',100),(12,'Jaco','Pefuq','pefuq.jaco@mail.fr','JPEO','bibliothecaire_saintheque',0,'26 rue de Wik, 42000 Saint-Etienne, France',100),(13,'Zisom','Bexoji','bexoji.zisom@mail.fr','ZBEM','client_saintheque',0,'40 rue de Wug, 42000 Saint-Etienne, France',100),(14,'Zejoxe','Xevo','xevo.zejoxe@mail.fr','ZXEE','client_saintheque',5,'51 rue de Kofe, 42000 Saint-Etienne, France',100),(15,'Uudu','Yifi','yifi.uudu@mail.fr','UYIU','client_saintheque',3,'8 rue de Zada, 42000 Saint-Etienne, France',100),(16,'Oelizoro','Robi','robi.oelizoro@mail.fr','OROO','admin_saintheque',2,'9 rue de Nob, 42000 Saint-Etienne, France',100),(17,'Kaci','Quriz','quriz.kaci@mail.fr','KQUI','admin_saintheque',3,'77 rue de Koj, 42000 Saint-Etienne, France',100),(18,'Cohabuwu','Yoqaxu','yoqaxu.cohabuwu@mail.fr','CYOU','bibliothecaire_saintheque',2,'68 rue de Fador, 42000 Saint-Etienne, France',100),(19,'Wozigi','Ruku','ruku.wozigi@mail.fr','WRUI','admin_saintheque',5,'70 rue de Maf, 42000 Saint-Etienne, France',100),(20,'Cunamaq','Veko','veko.cunamaq@mail.fr','CVEQ','bibliothecaire_saintheque',3,'64 rue de Auko, 42000 Saint-Etienne, France',100),(21,'Zasub','Zuhenu','zuhenu.zasub@mail.fr','ZZUB','client_saintheque',5,'60 rue de Xelux, 42000 Saint-Etienne, France',100),(22,'Wata','Zuxe','zuxe.wata@mail.fr','WZUA','client_saintheque',3,'80 rue de Wodi, 42000 Saint-Etienne, France',100),(23,'Wijodis','Xitul','xitul.wijodis@mail.fr','WXIS','bibliothecaire_saintheque',2,'77 rue de Xaxu, 42000 Saint-Etienne, France',100),(24,'Audah','Qonaru','qonaru.audah@mail.fr','AQOH','admin_saintheque',1,'78 rue de Cugen, 42000 Saint-Etienne, France',100),(25,'Mijir','Dovi','dovi.mijir@mail.fr','MDOR','client_saintheque',2,'16 rue de Gav, 42000 Saint-Etienne, France',100);
+INSERT INTO `adherents` VALUES (1,'Philippe','Edouard','edouard.philippe@mail.fr','PEDD','client_saintheque',0,'5 rue du Nord, 42000 Saint-Etienne, France',100),(2,'Gonga','Jérôme','jerome.gonga@mail.fr','GJEA','client_saintheque',5,'2 avenue Duroy, 42000 Saint-Etienne, France',200),(3,'Davirdcwuk','Puim','puim.davirdcwuk@mail.fr','DPUK','client_saintheque',0,'86 rue de Meil, 42000 Saint-Etienne, France',100),(4,'Euuaaeoi','Xoiaua','xoiaua.euuaaeoi@mail.fr','EXOI','bibliothecaire_saintheque',5,'35 rue de Mieuo, 42000 Saint-Etienne, France',100),(5,'Padeq','Qefif','qefif.padeq@mail.fr','PQEQ','bibliothecaire_saintheque',5,'70 rue de Eerar, 42000 Saint-Etienne, France',100),(6,'Kehi','Dahof','dahof.kehi@mail.fr','KDAI','bibliothecaire_saintheque',0,'72 rue de Tobo, 42000 Saint-Etienne, France',100),(7,'Iiloje','Demi','demi.iiloje@mail.fr','IDEE','bibliothecaire_saintheque',0,'81 rue de Dote, 42000 Saint-Etienne, France',100),(8,'Uiwamal','Vicec','vicec.uiwamal@mail.fr','UVIL','client_saintheque',0,'62 rue de Voro, 42000 Saint-Etienne, France',100),(9,'Yivizad','Joruj','joruj.yivizad@mail.fr','YJOD','bibliothecaire_saintheque',0,'95 rue de Hira, 42000 Saint-Etienne, France',100),(10,'Niqiwis','Gihece','gihece.niqiwis@mail.fr','NGIS','bibliothecaire_saintheque',0,'45 rue de Zefok, 42000 Saint-Etienne, France',100),(11,'Cuviseri','Xutodi','xutodi.cuviseri@mail.fr','CXUI','bibliothecaire_saintheque',0,'27 rue de Xuw, 42000 Saint-Etienne, France',100),(12,'Jaco','Pefuq','pefuq.jaco@mail.fr','JPEO','bibliothecaire_saintheque',0,'26 rue de Wik, 42000 Saint-Etienne, France',100),(13,'Zisom','Bexoji','bexoji.zisom@mail.fr','ZBEM','client_saintheque',0,'40 rue de Wug, 42000 Saint-Etienne, France',100),(14,'Zejoxe','Xevo','xevo.zejoxe@mail.fr','ZXEE','client_saintheque',5,'51 rue de Kofe, 42000 Saint-Etienne, France',100),(15,'Uudu','Yifi','yifi.uudu@mail.fr','UYIU','client_saintheque',3,'8 rue de Zada, 42000 Saint-Etienne, France',100),(16,'Oelizoro','Robi','robi.oelizoro@mail.fr','OROO','admin_saintheque',2,'9 rue de Nob, 42000 Saint-Etienne, France',100),(17,'Kaci','Quriz','quriz.kaci@mail.fr','KQUI','admin_saintheque',3,'77 rue de Koj, 42000 Saint-Etienne, France',100),(18,'Cohabuwu','Yoqaxu','yoqaxu.cohabuwu@mail.fr','CYOU','bibliothecaire_saintheque',2,'68 rue de Fador, 42000 Saint-Etienne, France',100),(19,'Wozigi','Ruku','ruku.wozigi@mail.fr','WRUI','admin_saintheque',5,'70 rue de Maf, 42000 Saint-Etienne, France',100),(20,'Cunamaq','Veko','veko.cunamaq@mail.fr','CVEQ','bibliothecaire_saintheque',3,'64 rue de Auko, 42000 Saint-Etienne, France',100),(21,'Zasub','Zuhenu','zuhenu.zasub@mail.fr','ZZUB','client_saintheque',5,'60 rue de Xelux, 42000 Saint-Etienne, France',100),(22,'Wata','Zuxe','zuxe.wata@mail.fr','WZUA','client_saintheque',3,'80 rue de Wodi, 42000 Saint-Etienne, France',100),(23,'Wijodis','Xitul','xitul.wijodis@mail.fr','WXIS','bibliothecaire_saintheque',2,'77 rue de Xaxu, 42000 Saint-Etienne, France',100),(24,'Audah','Qonaru','qonaru.audah@mail.fr','AQOH','admin_saintheque',1,'78 rue de Cugen, 42000 Saint-Etienne, France',100),(25,'Mijir','Dovi','dovi.mijir@mail.fr','MDOR','client_saintheque',2,'16 rue de Gav, 42000 Saint-Etienne, France',100),(26,'Hakujosa','Wokij','wokij.hakujosa@mail.fr','HWOA','client_saintheque',3,'7 rue de Sol, 42000 saint-Etienne, France',100),(27,'Josu','Yotizi','yotizi.josu@mail.fr','JYOU','bibliothecaire_saintheque',5,'95 rue de Kal, 42000 saint-Etienne, France',100),(28,'Zuresamo','Xako','xako.zuresamo@mail.fr','ZXAO','admin_saintheque',2,'21 rue de Zudij, 42000 saint-Etienne, France',100),(29,'Rabokub','Boqa','boqa.rabokub@mail.fr','RBOB','bibliothecaire_saintheque',1,'75 rue de Gajow, 42000 saint-Etienne, France',100),(30,'Zoku','Aeput','aeput.zoku@mail.fr','ZAEU','client_saintheque',3,'84 rue de Qaqax, 42000 saint-Etienne, France',100),(31,'Maqicafu','Eogo','eogo.maqicafu@mail.fr','MEOU','client_saintheque',2,'60 rue de Pil, 42000 saint-Etienne, France',100);
 /*!40000 ALTER TABLE `adherents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,7 +128,7 @@ CREATE TABLE `emprunts` (
   KEY `add_exemplaire_idx` (`id_exemplaire`),
   CONSTRAINT `add_adherent` FOREIGN KEY (`id_adherent`) REFERENCES `adherents` (`id_adherents`),
   CONSTRAINT `add_exemplaire` FOREIGN KEY (`id_exemplaire`) REFERENCES `exemplaires` (`id_exemplaire`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,7 +137,7 @@ CREATE TABLE `emprunts` (
 
 LOCK TABLES `emprunts` WRITE;
 /*!40000 ALTER TABLE `emprunts` DISABLE KEYS */;
-INSERT INTO `emprunts` VALUES (1,5,1,'2018-03-09','ok',1),(2,7,3,'2019-01-11','ok',1),(3,2,4,'2019-01-15','ok',0),(4,6,2,'2018-12-30','ok',0);
+INSERT INTO `emprunts` VALUES (1,5,1,'2018-03-09','ok',1),(2,7,3,'2019-01-11','ok',1),(3,2,4,'2019-01-15','ok',0),(4,6,2,'2018-12-30','ok',0),(5,17,7,'2019-01-01','ok',1),(6,14,8,'2017-05-28','ok',1);
 /*!40000 ALTER TABLE `emprunts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -162,7 +162,7 @@ CREATE TABLE `exemplaires` (
   CONSTRAINT `edition` FOREIGN KEY (`id_edition`) REFERENCES `edition` (`id_edition`),
   CONSTRAINT `mediatheque` FOREIGN KEY (`id_mediatheque`) REFERENCES `mediatheques` (`id_mediatheques`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `ouvrage` FOREIGN KEY (`id_ouvrage`) REFERENCES `ouvrage` (`id_ouvrage`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,7 +171,7 @@ CREATE TABLE `exemplaires` (
 
 LOCK TABLES `exemplaires` WRITE;
 /*!40000 ALTER TABLE `exemplaires` DISABLE KEYS */;
-INSERT INTO `exemplaires` VALUES (1,'2017-05-03',1,1,2,'2012-04-04'),(2,'2018-10-06',1,1,1,'2016-09-17'),(3,'2018-10-06',1,1,1,'2016-09-17'),(4,'2019-01-02',2,1,2,'2018-05-23'),(5,'2019-01-02',2,1,2,'2018-05-23'),(6,'2018-11-28',2,4,3,'2015-07-15');
+INSERT INTO `exemplaires` VALUES (1,'2017-05-03',1,1,2,'2012-04-04'),(2,'2018-10-06',1,1,1,'2016-09-17'),(3,'2018-10-06',1,1,1,'2016-09-17'),(4,'2019-01-02',2,1,2,'2018-05-23'),(5,'2019-01-02',2,1,2,'2018-05-23'),(6,'2018-11-28',2,4,3,'2015-07-15'),(7,'2018-12-03',2,2,2,'2014-08-07'),(8,'2016-02-14',2,1,2,'2012-04-04'),(9,'2015-04-29',2,1,2,'2012-04-04');
 /*!40000 ALTER TABLE `exemplaires` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -302,4 +302,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-26  2:02:05
+-- Dump completed on 2019-01-26 14:07:57
