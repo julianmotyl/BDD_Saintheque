@@ -3,6 +3,8 @@
 /**
 Structures
 **/
+#include <fstream> 
+#include <vector> 
 
 typedef struct user { 
 	std::string id;
@@ -20,8 +22,8 @@ typedef struct colonne {
 	int numColone;
 }colonne;
 
-static MYSQL* connexion; //On conserve la même connexion pendant toute la durée du programme
-//static user utilisateur; //On conserve aussi le mmême urilisateur
+static MYSQL* connexion; //On conserve la mï¿½me connexion pendant toute la durï¿½e du programme
+//static user utilisateur; //On conserve aussi le mmï¿½me urilisateur
 
 user* identification();
 bool connexionMySQL();
@@ -41,3 +43,7 @@ bool addDBRandomUser(unsigned int nb);
 std::string majuscule(std::string &chaine);
 std::string minuscule(std::string &chaine);
 std::string gename(const unsigned int MIN, const unsigned int MAX);
+std::vector <std::string> lectureFile(std::string name);
+std::vector<std::string> split(const std::string &str, const std::string &separator);
+bool insertFile(std::string file, std::string table);
+

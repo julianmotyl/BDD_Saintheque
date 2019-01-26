@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cstdlib>
 #include "fonction.h"
+#include <fstream>
+#include <vector>
 
 //static groupe grouptab[3][2] = { {"Admin_Saintheque","Admin"},{"Bibliothecaire_Saintheque","Bibliothecaire"},{"Client_Saintheque","Client"} };
 
