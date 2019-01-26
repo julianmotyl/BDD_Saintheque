@@ -35,13 +35,15 @@ bool recupRole(user*);
 void customQuery();
 void executeOrder66(user*);
 void importFile();
-void seeTheLoans();
+void seeTheLoans(user*);
 void empruntOuvrage(user*);
 
 void searchSaintheque();
 bool addDBRandomUser(unsigned int nb);
+
 std::string majuscule(std::string &chaine);
 std::string minuscule(std::string &chaine);
+
 std::string gename(const unsigned int MIN, const unsigned int MAX);
 std::vector <std::string> lectureFile(std::string name);
 std::vector<std::string> split(const std::string &str, const std::string &separator);

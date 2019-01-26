@@ -332,9 +332,7 @@ bool insertFile(string file, string table) {
 	MYSQL_RES *res;
 	conn = mysql_init(0);
 
-	//Choisir sa base de donn�es !!
-	//conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
-	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0);
 
 
 	if (conn) {
@@ -469,12 +467,12 @@ void action(user *utilisateur) {
 	{
 	case 1: 
 		break;
-	case 2: 
+	case 2: empruntOuvrage(utilisateur);
 		break;
 	case 3: 
 		break;
 	case 4: if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
-		seeTheLoans();
+		seeTheLoans(utilisateur);
 	}
 		break;
 	case 5: if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
@@ -520,7 +518,7 @@ vector <string> lectureFile(string name) {
 	return monTableau;
 }
 
-void customQuery() {/*
+void customQuery() {
 	string query;
 	cout << "Quel est votre requete ?" << endl;
 	cin >> query;
@@ -605,9 +603,16 @@ void importFile() {
 	}
 }
 
-void seeTheLoans() {
+void seeTheLoans(user * utilisateur) {
 	string debutQuery = "SELECT ouvrage.titre, ouvrage.resume, genre.intitule FROM ouvrage INNER JOIN genre INNER JOIN adherents INNER JOIN emprunts WHERE adherents.mail = '";
 	string nomAdherent;
+	if (utilisateur->role == "Bibliotecaire_Saintheque" || utilisateur->role == "Admin_Saintheque") {
+		cout << "De quel adherent voulez vous voir les emprunts ?" << endl;
+		cin >> nomAdherent;
+	}
+	else {
+		nomAdherent = utilisateur->id;
+	}
 	cout << "De quel adherent voulez vous voir les emprunts ?" << endl;
 	cin >> nomAdherent;
 	string finQuery = "' AND adherents.id_adherents = emprunts.id_adherent AND emprunts.id_ouvrage = ouvrage.id_ouvrage AND ouvrage.id_genre = genre.id_genre;";
@@ -633,6 +638,8 @@ void empruntOuvrage(user * utilisateur) {
 		MYSQL_ROW row = mysqlQuery(q2, NULL, 0);
 		int userMaxOuvrage = (int)row[0];
 		if (userMaxOuvrage != 0) {
+			cout << "Quel livre voulez vous emprunter ?" << endl << "Voici vos emprunts : " << endl;
+			seeTheLoans(utilisateur);
 
 		}
 		else {
