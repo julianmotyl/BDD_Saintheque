@@ -496,7 +496,7 @@ void searchSaintheque() {
 }
 
 void action(user *utilisateur) {
-	char choix;
+	int choix;
 	cout << "Bonjour, " << utilisateur->id << " que souhaitez vous faire ?" << endl;
 	cout << " (1) Rechercher un ouvrage par titre, par auteur ou par date" << endl;
 	cout << " (2) Emprunter un ouvrage" << endl;
@@ -509,24 +509,24 @@ void action(user *utilisateur) {
 		cout << " (10) Faire des requêtes SQL " << endl;
 		cout << " (66) Executer un adhérent " << endl;
 	}
-	//cout << "(99) Quitter" << endl;
+	cout << "(99) Quitter" << endl;
 	cin >> choix;
 	switch (choix)
 	{
-	case '1': 
+	case 1: 
 		searchSaintheque();
 		break;
-	case '2': 
+	case 2: 
 		empruntOuvrage(utilisateur);
 		break;
-	case '3': 
+	case 3: 
 		cout << endl << rendOuvrage(utilisateur) << endl;
 		break;
-	case '4': if (utilisateur->role == "bibliotecaire_saintheque" || utilisateur->role == "admin_saintheque") {
+	case 4: if (utilisateur->role == "bibliotecaire_saintheque" || utilisateur->role == "admin_saintheque") {
 		seeTheLoans();
 	}
 		break;
-	case '5': if (utilisateur->role == "bibliotecaire_saintheque" || utilisateur->role == "admin_saintheque") {
+	case 5: if (utilisateur->role == "bibliotecaire_saintheque" || utilisateur->role == "admin_saintheque") {
 		string file;
 		string table;
 		cout << "\nRentrer le nom du fichier dont vous souhaitez importer les données : ";
@@ -536,11 +536,11 @@ void action(user *utilisateur) {
 		cout << endl << insertFile(file, table) << endl;
 	}
 		break;
-	case '10': if (utilisateur->role == "admin_saintheque") {
+	case 10: if (utilisateur->role == "admin_saintheque") {
 		customQuery();
 	}
 		break; 
-	case '66': if (utilisateur->role == "admin_saintheque") {
+	case 66: if (utilisateur->role == "admin_saintheque") {
 		executeOrder66(utilisateur);
 	}
 		break;
