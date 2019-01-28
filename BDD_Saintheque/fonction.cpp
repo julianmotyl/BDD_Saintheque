@@ -3,6 +3,7 @@
 #include <time.h>
 #include <math.h>
 #include <string>
+#include <ctime>
 #include <fstream> 
 #include <vector> 
 #include "fonction.h"
@@ -75,6 +76,31 @@ user* identification() {
 		}
 	}
 	return utilisateur;
+}
+
+string today() {
+
+	string dat;
+	time_t _time;
+	struct tm timeInfo;
+	char format[32];
+	char year[5];
+	char mois[3];
+	char day[3];
+
+	time(&_time);
+	localtime_s(&timeInfo, &_time);
+	//localtime_r(&_time, &timeInfo);
+
+	strftime(format, 32, "%Y-%m-%d %H-%M", &timeInfo);
+	strftime(year, 5, "%Y", &timeInfo);
+	strftime(mois, 3, "%m", &timeInfo);
+	strftime(day, 3, "%d", &timeInfo);
+	dat += year;
+	dat += ("-%s",mois);
+	dat += ("-%s",day);
+
+	return dat;
 }
 
 bool connexionMySQL() {
@@ -180,9 +206,9 @@ MYSQL_ROW  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
 			{	
 				int i = 0;
 				while ( i < nbrColonnes) {
-					printf(table[i].nom.c_str());
+					printf("-|- %s", table[i].nom.c_str());
 					printf(" : ");
-					printf( " %s, " , row[table[i].numColone]);
+					printf( "%s -|-\n" , row[table[i].numColone]);
 					i++;
 				}
 				printf("\n");
@@ -190,7 +216,7 @@ MYSQL_ROW  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
 		}
 		else
 		{
-			cout << "La requete a echoue : " << mysql_error(connexion) << endl;
+			cout << "La requête a échoué : " << mysql_error(connexion) << endl;
 		}
 	}
 	else {
@@ -384,53 +410,57 @@ bool insertFile(string file, string table) {
 void searchSaintheque() {
 	unsigned int choix;
 	string search;
+	vector <string> tmp;
 	bool notok = true;
-
-	colonne table[6];
+	MYSQL_ROW dataTable = nullptr;
+	colonne table[11];
 	int nombreColones = sizeof(table) / sizeof(colonne);
 	string query;
 	while (notok) {
-		cout << "Souhaitez-vous rechercher un ouvrage..." << endl;
+		cout << "\nSouhaitez-vous rechercher un ouvrage..." << endl;
 		cout << "(1) ...par son titre ? [titre]"<< endl;
 		cout << "(2) ...par son auteur ? [prenom nom]" << endl;
 		cout << "(3) ...par sa date de parution ? [yyyy-mm-dd]" << endl;
-		cout << "(0) QUITTER" << endl;
+		cout << "(99) QUITTER" << endl << endl;
 		cin >> choix;
-		cout << "Veuillez rentrer le(s) mot(s) clé(s) pour la recherche ? " << endl << ": ";
+		cout << "\nVeuillez rentrer le(s) mot(s) clé(s) pour la recherche ? " << endl << ": ";
 		getline(cin, search);
-		//afficher les mediatheques et nombre d'exemplaires
 		switch (choix)
 		{
 		case 1:
 			query = "SELECT ouvrage.titre,auteur.prenom,auteur.nom,ouvrage.date_parution,ouvrage.resume,genre.intitule,type_media.intitule,ouvrage.duree,COUNT(exemplaires.id_ouvrage), COUNT(DISTINCT mediatheques.id_mediatheques) FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur INNER JOIN type_media ON ouvrage.id_type_media = type_media.id_type_media INNER JOIN genre ON ouvrage.id_genre = genre.id_genre INNER JOIN exemplaires ON ouvrage.id_ouvrage = exemplaires.id_ouvrage INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheques WHERE ouvrage.titre SOUNDS LIKE '" + search +"';";
 			//SELECT ouvrage.*,auteur.prenom,auteur.nom,ouvrage.date_parution,ouvrage.resume,genre.intitule,type_media.intitule,ouvrage.duree,COUNT(exemplaires.id_ouvrage), COUNT(DISTINCT mediatheques.id_mediatheques) FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur INNER JOIN type_media ON ouvrage.id_type_media = type_media.id_type_media INNER JOIN genre ON ouvrage.id_genre = genre.id_genre INNER JOIN exemplaires ON ouvrage.id_ouvrage = exemplaires.id_ouvrage INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheques WHERE ouvrage.titre SOUNDS LIKE 'les justes';
-			//SELECT COUNT(exemplaires.id_exemplaire) FROM exemplaires INNER JOIN emprunts ON emprunts.id_exemplaire = exemplaires.id_exemplaire WHERE rendu = 1 OR exemplaires.id_exemplaire != emprunts.id_exemplaire;			
+			//SELECT COUNT(exemplaires.id_exemplaire) FROM exemplaires INNER JOIN emprunts ON emprunts.id_exemplaire = exemplaires.id_exemplaire WHERE rendu = 1 OR exemplaires.id_exemplaire != emprunts.id_exemplaire;		
 			break;
 		case 2:
-			query = "SELECT * FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur WHERE auteur.nom SOUNDS LIKE '" + search.substr(search.find(' ') + 1, 999999) + "' AND auteur.prenom SOUNDS LIKE '" + search.substr(1, search.find(' ') - 1) + "';";
-			/*table[0].nom = "NOM";
-			table[0].numColone = 1;
-			table[1].nom = "PRENOM";
-			table[1].numColone = 2;
-			table[2].nom = "GENRE";
-			table[2].numColone = 3;
-			table[3].nom = "DATE DE NAISSANCE";
-			table[3].numColone = 4;
-			table[4].nom = "DATE DE DECES";
-			table[4].numColone = 5;
-			table[5].nom = "BIOGRAPHIE";
-			table[5].numColone = 6;*/
+			query = "SELECT ouvrage.titre,auteur.prenom,auteur.nom,ouvrage.date_parution,ouvrage.resume,genre.intitule,type_media.intitule,ouvrage.duree,COUNT(exemplaires.id_ouvrage), COUNT(DISTINCT mediatheques.id_mediatheques) FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur INNER JOIN type_media ON ouvrage.id_type_media = type_media.id_type_media INNER JOIN genre ON ouvrage.id_genre = genre.id_genre INNER JOIN exemplaires ON ouvrage.id_ouvrage = exemplaires.id_ouvrage INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheques WHERE auteur.nom SOUNDS LIKE '" + search.substr(search.find(' ') + 1, 999999) + "' AND auteur.prenom SOUNDS LIKE '" + search.substr(1, search.find(' ') - 1) + "';";
+			//table = {{"TITRE",0},{"PRENOM"},{"NOM"},{"DATE DE PARUTION"},{"RESUME"},{"GENRE"},{"MEDIA"},{"DUREE"},{"NB D'EXEMPLAIRES EXISTANTS"},{"NB DE MEDIATHEQUES EN POSSEDANT"} };
+			/*tmp = { "TITRE","PRENOM","NOM","DATE DE PARUTION","RESUME","GENRE","MEDIA","DUREE","NB D'EXEMPLAIRES EXISTANTS","NB DE MEDIATHEQUES EN POSSEDANT" };
+
+			for (unsigned int i = 0; i < 11; i++)
+			{
+				table[i].nom = tmp[i];
+				table[i].numColone = i;
+			}*/
 			break;
 		case 3:
-			query = "SELECT * FROM ouvrage WHERE date_parution='" + search +"';";
+			query = "SELECT ouvrage.titre,auteur.prenom,auteur.nom,ouvrage.date_parution,ouvrage.resume,genre.intitule,type_media.intitule,ouvrage.duree,COUNT(exemplaires.id_ouvrage), COUNT(DISTINCT mediatheques.id_mediatheques) FROM ouvrage INNER JOIN auteur ON ouvrage.id_auteur = auteur.id_auteur INNER JOIN type_media ON ouvrage.id_type_media = type_media.id_type_media INNER JOIN genre ON ouvrage.id_genre = genre.id_genre INNER JOIN exemplaires ON ouvrage.id_ouvrage = exemplaires.id_ouvrage INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheques WHERE ouvrage.date_parution = '" + search + "';";
 			break;
-		case 0:
+		case 99:
 			notok = false;
 			break;
 		default:
 			cout << "/!\ Erreur de choix : non reconnu /!\\" << endl;
+			break;
 		}
-		table[0].nom = "TITRE";
+		tmp = { "TITRE","PRENOM","NOM","DATE DE PARUTION","RESUME","GENRE","MEDIA","DUREE","NB D'EXEMPLAIRES EXISTANTS","NB DE MEDIATHEQUES EN POSSEDANT" };
+		cout << tmp.size();
+		for (unsigned int i = 0; i < tmp.size(); i++)
+		{
+			table[i].nom = tmp[i];
+			table[i].numColone = i;
+		}
+		/*table[0].nom = "TITRE";
 		table[0].numColone = 1;
 		table[1].nom = "GENRE";
 		table[1].numColone = 2;
@@ -441,18 +471,33 @@ void searchSaintheque() {
 		table[4].nom = "DUREE";
 		table[4].numColone = 5;
 		table[5].nom = "TYPE";
-		table[5].numColone = 6;
+		table[5].numColone = 6;*/
+
 		char * chQuery = new char[query.length() + 1];
 		strcpy(chQuery, query.c_str());
-		mysqlQuery(chQuery, table, nombreColones);
+		dataTable = mysqlQuery(chQuery, table, nombreColones);
+		search = dataTable[0];
+		
+		query = "SELECT COUNT(exemplaires.id_exemplaire), mediatheques.adresse FROM exemplaires INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheques INNER JOIN emprunts ON emprunts.id_exemplaire = exemplaires.id_exemplaire INNER JOIN ouvrage ON exemplaires.id_ouvrage = ouvrage.id_ouvrage WHERE(rendu = 1 OR exemplaires.id_exemplaire NOT IN(SELECT emprunts.id_exemplaire FROM emprunts)) AND ouvrage.titre SOUNDS LIKE '"+search+"';";
+		colonne table2[3];
+		vector <string> tmp2;
+		tmp2 = {"DONT DISPONIBLE","MEDIATHEQUE"};
+		for (unsigned int i = 0; i < tmp2.size(); i++)
+		{
+			table2[i].nom = tmp2[i];
+			table2[i].numColone = i;
+		}
+		char * chQuery2 = new char[query.length() + 1];
+		strcpy(chQuery2, query.c_str());
+		dataTable = mysqlQuery(chQuery2, table2, nombreColones);
 		system("PAUSE");
 	}
 
 }
 
 void action(user *utilisateur) {
-	int choix;
-	cout << "Bonjour " << utilisateur->id << " que souhaitez vous faire ?" << endl;
+	char choix;
+	cout << "Bonjour, " << utilisateur->id << " que souhaitez vous faire ?" << endl;
 	cout << " (1) Rechercher un ouvrage par titre, par auteur ou par date" << endl;
 	cout << " (2) Emprunter un ouvrage" << endl;
 	cout << " (3) Retourner un ouvrage " << endl;
@@ -484,9 +529,9 @@ void action(user *utilisateur) {
 	case '5': if (utilisateur->role == "bibliotecaire_saintheque" || utilisateur->role == "admin_saintheque") {
 		string file;
 		string table;
-		cout << "Rentrer le nom du fichier dont vous souhaitez importer les données : ";
+		cout << "\nRentrer le nom du fichier dont vous souhaitez importer les données : ";
 		getline(cin, file);
-		cout << "Rentrer le nom de la table dans laquelle vous souhaitez importer les données : ";
+		cout << "\nRentrer le nom de la table dans laquelle vous souhaitez importer les données : ";
 		getline(cin, table);
 		cout << endl << insertFile(file, table) << endl;
 	}
@@ -553,6 +598,10 @@ void customQuery() {
 
 	//Libération du jeu de résultat
 	mysql_free_result(result);
+}
+
+bool rendOuvrage(user *utilisateur) {
+	return true;
 }
 
 void executeOrder66(user * utilisateur) {
@@ -643,10 +692,11 @@ void empruntOuvrage(user * utilisateur) {
 
 		}
 		else {
-			cout << "Vous avez déjà trop d'emprunts en cours" << endl;
+			cout << "Vous avez déjà trop d'emprunts en cours." << endl;
 		}
 	}
 	else {
-		cout << "Votre score est trop mauvais, vous en respectez pas la ligne du parti" << endl;
+		cout << "/!\ Votre score est trop mauvais, vous avez rendu trop souvent vos emprunts en retard. /!\\" << endl;
+		cout << "Contactez un administrateur pour une revalorisation manuelle de votre score." << endl;
 	}
 }

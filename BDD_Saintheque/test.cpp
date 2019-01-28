@@ -13,6 +13,7 @@ int qstater;
 
 
 int wmain(){
+
 	srand(time(NULL));
 	MYSQL* conn;
 	MYSQL_ROW row = nullptr;
@@ -23,6 +24,7 @@ int wmain(){
 	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
 
 	if (conn) {
+		cout << "Bienvenu à la Médiatheque de Saint-Etienne ! " << endl; // prints Bienvenu à la Médiatheque de Saint-Etienne !
 		puts("Successful connection to database!");
 
 		string query = "SELECT * FROM adherents";
@@ -45,14 +47,22 @@ int wmain(){
 		puts("Connection to database has failed!");
 	}
 	system("PAUSE");
-	addDBRandomUser(3);
-	/*for(unsigned int i = 0;i< lectureFile("test").size();i++)
-		cout << lectureFile("test")[i]<<endl;*/
-	//searchSaintheque();
-	cout << endl << insertFile("test", "ouvrage")<<endl;
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+
+	addDBRandomUser(1);
+
+
+
+	vector <string> myTab = lectureFile("test");
+	for(unsigned int i = 0;i< myTab.size();i++)
+		cout << myTab[i]<<endl;
+
+	searchSaintheque();
+
+	//cout << endl << insertFile("test", "ouvrage")<<endl;
+
 	system("PAUSE");
-	//cout<<"add_err : "<<addDBRandomUser(5) << endl;
-	//system("PAUSE");
 
 return 0;
 }
