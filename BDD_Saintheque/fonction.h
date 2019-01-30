@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
-/**
-Structures
-**/
 #include <fstream> 
 #include <vector> 
 
+/**
+Structures
+**/
 typedef struct user { 
 	std::string id;
 	std::string mdp;
@@ -23,7 +23,6 @@ typedef struct colonne {
 }colonne;
 
 static MYSQL* connexion; //On conserve la m�me connexion pendant toute la dur�e du programme
-//static user utilisateur; //On conserve aussi le mm�me urilisateur
 
 std::string today();
 user* identification();
@@ -41,8 +40,8 @@ void empruntOuvrage(user* user);
 bool rendOuvrage(user * user);
 void searchSaintheque();
 bool addDBRandomUser(unsigned int nb);
-std::string majuscule(std::string &chaine);
-std::string minuscule(std::string &chaine);
+std::string majuscule(std::string);
+std::string minuscule(std::string);
 std::string gename(const unsigned int MIN, const unsigned int MAX);
 std::vector <std::string> lectureFile(std::string name);
 std::vector<std::string> split(const std::string &str, const std::string &separator);

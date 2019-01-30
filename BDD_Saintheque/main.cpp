@@ -28,7 +28,7 @@ int main() {
 	char id[6] = "test1";
 	utilisateur->id = id;
 	utilisateur->mdp = id;
-	utilisateur->role = "Admin_Saintheque";
+	utilisateur->role = "admin_saintheque";
 	connexionMySQL();
 	//utilisateur = identification();
 	//verifUtilisateur(utilisateur);

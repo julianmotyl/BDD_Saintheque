@@ -126,13 +126,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="fonction.cpp" />
-    <ClCompile Include="list.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fonction.h" />
-    <ClInclude Include="list.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

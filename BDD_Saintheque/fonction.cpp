@@ -106,8 +106,8 @@ string today() {
 bool connexionMySQL() {
 
 	connexion = mysql_init(0);
-	//connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "saintheque", 3306, NULL, 0); // DB Julian
-	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
+	connexion = mysql_real_connect(connexion, "localhost", "root", ".root123.", "saintheque", 3306, NULL, 0); // DB Julian
+	//connexion = mysql_real_connect(connexion, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
 	if (connexion){
 		cout << "La connexion a fonctionné !" << endl;
 		return true;
@@ -193,7 +193,7 @@ bool recupRole(user *utilisateur) {
 
 MYSQL_ROW  mysqlQuery(const char * query, colonne table[], int nbrColonnes)
 {
-	MYSQL_ROW row = nullptr;
+	MYSQL_ROW row = NULL;
 	MYSQL_RES *res;
 
 
@@ -286,8 +286,8 @@ bool addDBRandomUser(unsigned int nb) {
 	MYSQL_RES *res;
 	conn = mysql_init(0);
 
-	//conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
-	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "saintheque", 3306, NULL, 0); //DB Julian
+	//conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
 
 
 	if (conn) {
@@ -360,8 +360,8 @@ bool insertFile(string file, string table) {
 	conn = mysql_init(0);
 
 	//Choisir sa base de données !!
-	//conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "sainteque", 3306, NULL, 0); //DB Julian
-	conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
+	conn = mysql_real_connect(conn, "localhost", "root", ".root123.", "saintheque", 3306, NULL, 0); //DB Julian
+	//conn = mysql_real_connect(conn, "localhost", "root", ".root123", "saintheque", 3307, NULL, 0); //DB Kent
 
 
 	if (conn) {
@@ -412,8 +412,7 @@ void searchSaintheque() {
 	string search;
 	vector <string> tmp;
 	bool notok = true;
-	MYSQL_ROW dataTable = nullptr;
-	colonne table[11];
+	colonne table[10];
 	int nombreColones = sizeof(table) / sizeof(colonne);
 	string query;
 	while (notok) {
@@ -423,8 +422,11 @@ void searchSaintheque() {
 		cout << "(3) ...par sa date de parution ? [yyyy-mm-dd]" << endl;
 		cout << "(99) QUITTER" << endl << endl;
 		cin >> choix;
+		if (choix == 99) {
+			break;
+		}
 		cout << "\nVeuillez rentrer le(s) mot(s) clé(s) pour la recherche ? " << endl << ": ";
-		getline(cin, search);
+		cin >> search;
 		switch (choix)
 		{
 		case 1:
@@ -473,10 +475,9 @@ void searchSaintheque() {
 		table[5].nom = "TYPE";
 		table[5].numColone = 6;*/
 
-		char * chQuery = new char[query.length() + 1];
-		strcpy(chQuery, query.c_str());
-		dataTable = mysqlQuery(chQuery, table, nombreColones);
-		search = dataTable[0];
+		const char * chQuery = query.c_str();
+		MYSQL_ROW dataTable = mysqlQuery(chQuery, table, 10);
+		//search = dataTable[0];
 		
 		query = "SELECT COUNT(exemplaires.id_exemplaire), mediatheques.adresse FROM exemplaires INNER JOIN mediatheques ON exemplaires.id_mediatheque = mediatheques.id_mediatheques INNER JOIN emprunts ON emprunts.id_exemplaire = exemplaires.id_exemplaire INNER JOIN ouvrage ON exemplaires.id_ouvrage = ouvrage.id_ouvrage WHERE(rendu = 1 OR exemplaires.id_exemplaire NOT IN(SELECT emprunts.id_exemplaire FROM emprunts)) AND ouvrage.titre SOUNDS LIKE '"+search+"';";
 		colonne table2[3];
@@ -487,12 +488,9 @@ void searchSaintheque() {
 			table2[i].nom = tmp2[i];
 			table2[i].numColone = i;
 		}
-		char * chQuery2 = new char[query.length() + 1];
-		strcpy(chQuery2, query.c_str());
-		dataTable = mysqlQuery(chQuery2, table2, nombreColones);
-		system("PAUSE");
+		const char * chQuery2 =  query.c_str();
+		dataTable = mysqlQuery(chQuery2, table2, 2);
 	}
-
 }
 
 void action(user *utilisateur) {
@@ -505,7 +503,7 @@ void action(user *utilisateur) {
 		cout << " (4) Afficher les ouvrages empruntés par un adhérent" << endl;
 		cout << " (5) Ajouter du contenu dans une table de la base de données à partir d'un fichier externe" << endl;
 	}
-	else if (utilisateur->role == "admin_saintheque") {
+	if (utilisateur->role == "admin_saintheque") {
 		cout << " (10) Faire des requêtes SQL " << endl;
 		cout << " (66) Executer un adhérent " << endl;
 	}
@@ -576,7 +574,8 @@ void customQuery() {
 	string query;
 	cout << "Quelle est votre requête ?" << endl;
 	cin >> query;
-	mysql_query(connexion, query.c_str());
+	const char *q = query.c_str();
+	mysql_query(connexion, q);
 	//Déclaration des objets
 	MYSQL_RES *result = NULL;
 	MYSQL_ROW row;
